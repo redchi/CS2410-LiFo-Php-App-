@@ -1,16 +1,18 @@
 <?php
 include_once "View/View.php";
+include_once 'Controller/SqlHandler.php';
+
 session_start();
 class  Controller{
     
     
-    public $model;
+    public $SqlHandler;
+    
+    
     public $views; 
     public $pointer;
     
     private $currentView;
-   // private $previousView;
-    
     
     public function __construct(){
         $viewNames = array("IntroScreenView","ItemsTableView"
@@ -20,9 +22,9 @@ class  Controller{
             $view = new $viewName();
             $this->views[$viewName] = $view;
         };
-       // $this -> currentView = "IntroScreenView"; 
-            
-            
+        
+        $this -> SqlHandler = new SqlHandler();
+        echo"<h1>DONE</h1>";
     }
     
     public function invoke($method,$data){
@@ -41,6 +43,8 @@ class  Controller{
         
         $this->DisplayView();
         $this->saveState();
+        
+        $this->SqlHandler->getAllUserIds();
         
         echo "<br>
         current view ".$this -> currentView."<br>";
@@ -107,7 +111,7 @@ class  Controller{
             $this -> currentView = "IntroScreenView";
         };
         echo "<br>fin<br>";
-        echo $a."  view <br>";
+     //   echo $a."  view <br>";
     }
     
     

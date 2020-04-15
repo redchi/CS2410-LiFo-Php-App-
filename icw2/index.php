@@ -2,15 +2,17 @@
 
 include_once  "Controller/Controller.php";
 
-
+echo "#1";
 if(!isset($_SESSION['Controller'])){
-    $Controller = new Controller();    
+    $Controller = new Controller();
+    echo "#2";
 }
 else{
     $Controller = unserialize($_SESSION['Controller']);
+    echo "#3";
 }
  
-
+echo "#4";
 //$t = $_POST[0];
 echo print_r($_POST);
     
