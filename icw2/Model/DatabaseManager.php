@@ -17,13 +17,16 @@ class DatabaseManager{
        
         $dsn = "mysql:host=".$Server_name.";dbname=".$database_name;        
         $this->DBConnect = new PDO($dsn,$username,$pwd);
+        $this->DBConnect->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
     }
     
     // returns objects of rows
     public function queryDatabase($sql,$namedParams = array()){
         $this -> connectToDatabase();
         $stmt = $this->DBConnect->prepare($sql);
+        echo print_r($namedParams);
         $stmt->execute($namedParams);
+        
         $resultObjs = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt->closeCursor();
         $this->DBConnect = null;
@@ -33,7 +36,47 @@ class DatabaseManager{
    
     
     
-    
+    public function x1(){
+        $this -> connectToDatabase();
+        $sql = "SELECT * FROM items WHERE Name = :name  LIMIT :x1;";
+        $in = 2;
+        if(gettype($in) == "integer"){
+            echo "yeeeeeeeeeee";
+        }
+        
+     
+        
+        $namedParams = array("x1"=>2,"name"=>"itemtest");
+        
+        $stmt = $this->DBConnect->prepare($sql);
+        
+        
+//         foreach(array_keys($namedParams) as $key){
+//             $value = $namedParams[$key];
+//             echo "<br><h1>key = $key  val = $value<br></h1>";
+//             if(gettype($value) == "integer"){
+//                 $stmt->bindParam($key, $value, PDO::PARAM_INT);
+//                 unset($namedParams[$key]);
+//                 echo "<h1>passed</h1>";
+//             }
+//         }
+        
+        
+        
+        
+        echo "<br> lr".print_r(array_keys($namedParams))." e<br>";
+        
+        
+        $stmt->execute($namedParams);
+        $stmt->debugDumpParams();
+        echo "<br> ##1<br>";
+        $resultObjs = $stmt->fetchAll(PDO::FETCH_OBJ);
+        foreach($resultObjs as $obj){
+            echo "<br> name = ".$obj->Name;
+        }
+        $stmt->closeCursor();
+        $this->DBConnect = null;
+    }
 
     
     

@@ -9,13 +9,12 @@ class  Controller{
     public $SqlHandler;
     
     
-    public $views; 
+    public  $views; 
     public $pointer;
     
     
     
-    private $currentView;
-    
+    private $currentView;    
     private $dataPassedToView;
     
     public function __construct(){
@@ -33,8 +32,7 @@ class  Controller{
     
     
     public function invoke($method,$data){
-        echo "<br>called<br><h2>method = $method</h2>";
-        echo "data = ".print_r($data)."<br>";
+        echo "<h2>method called = $method</h2><br>";
 
         $this->dataPassedToView = array();
         
@@ -47,19 +45,9 @@ class  Controller{
         else{
             $this->Error("method $method not found");
         }
-        
-        
-       // $this->Error("test error");
-        
         $this->DisplayView();
-        $this->saveState();
-        
-       // $this->SqlHandler->getAllUserIds();
-       
-        
-        
-        echo "<br>
-        current view ".$this -> currentView."<br>";
+        $this->saveState();      
+        echo "<br>current view = ".$this -> currentView."<br>";
     }
     
  
@@ -91,11 +79,20 @@ class  Controller{
     }
     
     private function DisplayItemsTableView(){
-        $allItems = $this->SqlHandler->getAllItems();       
-        foreach($allItems as $item){
-            echo "<br><h1> item name =".$item->Name."<br></h1>";
+        $countIndex = 0;
+        if(isset($this->dataPassedToView['countIndex'])){
+            $countIndex = $this->dataPassedToView['countIndex'];
         }
-        $allItems = "";
+        
+        echo "count index ## = ".$countIndex;
+        $allItems = $this->SqlHandler->getAllItems($countIndex,$countIndex + 5); 
+        
+        
+        
+        // do validation for query result ! 5 max
+        
+        
+        $this -> dataPassedToView["queryResult"] = $allItems;
         $this->views[$this->currentView]->draw($this->dataPassedToView);
     }
     
@@ -121,6 +118,34 @@ class  Controller{
         $password = $data["password"];
         $passwordConfirm = $data["password2"];
         
+    }
+    
+    
+    
+    
+    
+    private function nextItemPageClicked($countIndex){
+        $itemCountIndex = (int)$countIndex;
+        echo "next item page called $itemCountIndex ";
+        
+        $maxCount = $this->SqlHandler->getAllItemsCount();
+        $setIndex = $itemCountIndex;
+        if($maxCount - ($itemCountIndex+5)>0){
+            $setIndex = $setIndex + 5;
+        }
+        $this->dataPassedToView['countIndex'] = $setIndex;
+    }
+    
+    private function previousItemPageClicked($countIndex){
+        $itemCountIndex = (int)$countIndex;
+        echo "prev item page called $itemCountIndex ";
+        
+       // $maxCount = $this->SqlHandler->getAllItemsCount();
+        $setIndex = $itemCountIndex;
+        if($itemCountIndex - 5>=0){
+            $setIndex = $setIndex - 5;
+        }
+        $this->dataPassedToView['countIndex'] = $setIndex;
     }
     
     

@@ -7,8 +7,7 @@ class SqlHandler{
     public function __construct(){
         $this->Model = new DatabaseManager();
     }
-    
-    
+       
     
     public function getAllUserIds(){
         $sql = "SELECT * FROM users";
@@ -18,16 +17,20 @@ class SqlHandler{
         }
     }
     
-    public function getAllItems(){
-        $sql = "SELECT * FROM items";
-        $resultObjs = $this->Model->queryDatabase($sql);
+    public function getAllItems($limitMin,$limitMax){
+        $sql = "SELECT * FROM items LIMIT :minLimit , :maxLimit;";
+        $namedParams = array("minLimit"=>$limitMin,"maxLimit"=>$limitMax);
+        $resultObjs = $this->Model->queryDatabase($sql,$namedParams);
         return $resultObjs;
     }
     
-    
-    
-    
-    
+    public function getAllItemsCount(){
+        $sql = "SELECT COUNT(Name) AS count FROM items;";
+        $outputObj =$this->Model->queryDatabase($sql);
+        $result =(int)$outputObj[0]->count;
+        return $result;
+    }
+
     
 }
 

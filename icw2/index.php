@@ -1,7 +1,9 @@
 <?php
 
 include_once  "Controller/Controller.php";
-//$Controller = new Controller();
+
+echo"<h3> post =  ".print_r($_POST)."</h3><br>";
+
 
     if(!isset($_SESSION['Controller'])){
         $Controller = new Controller();
@@ -9,7 +11,6 @@ include_once  "Controller/Controller.php";
     else{
         $Controller = unserialize($_SESSION['Controller']);
     }
- 
 
     if(count (array_keys ($_POST))>1){
         $method_name=null;
@@ -32,7 +33,6 @@ include_once  "Controller/Controller.php";
         $Controller ->invoke(null, null);
     }
 
-    
     $_POST = array();
 
 ?>
