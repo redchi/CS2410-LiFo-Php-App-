@@ -12,12 +12,17 @@ class SqlHandler{
     
     public function getAllUserIds(){
         $sql = "SELECT * FROM users";
-        $result = $this->Model->queryDatabase($sql);
-        $ids = $this->Model->processQueryResult($result, "UserID");
-        $t1 = $ids[0];
-        echo "<br><h1>yee yee ".$t1."<br></h1>";
+        $resultObjs = $this->Model->queryDatabase($sql);
+        foreach($resultObjs as $rowObj){
+            echo "<br><h1> email =".$rowObj->Email."<br></h1>";
+        }
     }
     
+    public function getAllItems(){
+        $sql = "SELECT * FROM items";
+        $resultObjs = $this->Model->queryDatabase($sql);
+        return $resultObjs;
+    }
     
     
     

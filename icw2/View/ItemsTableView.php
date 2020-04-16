@@ -12,8 +12,56 @@ Class ItemsTableView extends View{
                 <html>
                 <body>
             
-                <h1>Main item list VIEW!</h1>
-               
+                <h1>Main item list VIEW!</h1><br>
+                           
+            <table  border = "5">
+            	<tbody>
+            		<tr>
+            			<td>Item Name </td>
+            			<td>Category </td>
+            			<td>Colour</td>
+            			<td>Date Found </td>
+            		</tr>
+            		<tr>
+            			<td> </td>
+            			<td> </td>
+            			<td> </td>
+            			<td> </td>
+            		</tr>
+            		<tr>
+            			<td> </td>
+            			<td> </td>
+            			<td> </td>
+            			<td> </td>
+            		</tr>
+            		<tr>
+            			<td> </td>
+            			<td> </td>
+            			<td> </td>
+            			<td> </td>
+            		</tr>
+            		<tr>
+            			<td> </td>
+            			<td> </td>
+            			<td> </td>
+            			<td> </td>
+            		</tr>
+            		<tr>
+            			<td> </td>
+            			<td> </td>
+            			<td> </td>
+            			<td> </td>
+            		</tr>
+            	</tbody>
+            </table>
+
+
+
+
+
+
+
+
 					<br>
 				<form action = "./index.php" method = "POST">
 					<input type=hidden name = "backButtonClicked" value ="">

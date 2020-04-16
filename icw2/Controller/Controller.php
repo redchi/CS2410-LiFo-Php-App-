@@ -33,7 +33,7 @@ class  Controller{
     
     
     public function invoke($method,$data){
-        echo "<br>called<br>method = $method";
+        echo "<br>called<br><h2>method = $method</h2>";
         echo "data = ".print_r($data)."<br>";
 
         $this->dataPassedToView = array();
@@ -54,7 +54,7 @@ class  Controller{
         $this->DisplayView();
         $this->saveState();
         
-        $this->SqlHandler->getAllUserIds();
+       // $this->SqlHandler->getAllUserIds();
        
         
         
@@ -90,6 +90,15 @@ class  Controller{
         $this->views[$this->currentView]->draw($this->dataPassedToView);
     }
     
+    private function DisplayItemsTableView(){
+        $allItems = $this->SqlHandler->getAllItems();       
+        foreach($allItems as $item){
+            echo "<br><h1> item name =".$item->Name."<br></h1>";
+        }
+        $allItems = "";
+        $this->views[$this->currentView]->draw($this->dataPassedToView);
+    }
+    
     
     
     
@@ -106,10 +115,12 @@ class  Controller{
    
     
     private function registerationAttempt($data){
+        echo "registration attempted";
         $username = $data["username"];
         $email = $data["email"];
         $password = $data["password"];
         $passwordConfirm = $data["password2"];
+        
     }
     
     
