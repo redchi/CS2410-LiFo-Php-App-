@@ -1,29 +1,38 @@
 <?php
 
 include_once  "Controller/Controller.php";
+//$Controller = new Controller();
 
-echo "#1";
-if(!isset($_SESSION['Controller'])){
-    $Controller = new Controller();
-    echo "#2";
-}
-else{
-    $Controller = unserialize($_SESSION['Controller']);
-    echo "#3";
-}
- 
-echo "#4";
-//$t = $_POST[0];
-echo print_r($_POST);
-    
-    $key = key($_POST);
-    $data = null;
-    if($key != null){
-      $data = $_POST[$key];
+    if(!isset($_SESSION['Controller'])){
+        $Controller = new Controller();
     }
+    else{
+        $Controller = unserialize($_SESSION['Controller']);
+    }
+ 
+
+    if(count (array_keys ($_POST))>1){
+        $method_name=null;
+        foreach((array_keys ($_POST)) as $key){          
+            if(method_exists ($Controller, $key)){
+                $method_name = $key;                
+                unset($_POST[$key]);
+            }
+        }
+        $Controller->invoke($method_name,$_POST);
+    }
+    
+    else if(count(array_keys($_POST)) == 1){
+        $method_name = key($_POST);
+        $data = $_POST[$method_name];
+        $Controller ->invoke($method_name, $data);
+    }
+    
+    else {
+        $Controller ->invoke(null, null);
+    }
+
+    
     $_POST = array();
-    $Controller ->invoke($key, $data);
-
-
 
 ?>

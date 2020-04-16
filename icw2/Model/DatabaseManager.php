@@ -20,9 +20,11 @@ class DatabaseManager{
         $this->connectToDatabase();
         $result = mysqli_query($this ->DBConnect,$SQL_query);
         if (mysqli_num_rows($result) > 0) {
-            echo mysqli_num_rows($result);
-            echo "<br>".print_r($result)."<br>";
+            // for error handling
+            
+            
         }
+        
         return $result;
     }
     
@@ -31,6 +33,7 @@ class DatabaseManager{
         $output = [];    
         while(($row = mysqli_fetch_assoc($query_result)[$col_name])){
             array_push($output , $row);
+           // echo($row."xr");
         }
         return $output;
     }  

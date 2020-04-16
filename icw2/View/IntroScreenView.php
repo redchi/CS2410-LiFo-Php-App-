@@ -2,10 +2,11 @@
 Class IntroScreenView extends View{
     
     public function __construct(){
-        //nothing
+        parent::__construct();
     }
     
     public function draw($data){
+        parent::draw($data);
         $html = '
                 <!DOCTYPE html>
                 <html>

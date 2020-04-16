@@ -6,6 +6,7 @@ Class ItemsTableView extends View{
     }
     
     public function draw($data){
+        parent::draw($data);
         $html = '
                 <!DOCTYPE html>
                 <html>

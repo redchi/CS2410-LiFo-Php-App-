@@ -12,7 +12,11 @@ class  Controller{
     public $views; 
     public $pointer;
     
+    
+    
     private $currentView;
+    
+    private $dataPassedToView;
     
     public function __construct(){
         $viewNames = array("IntroScreenView","ItemsTableView"
@@ -24,31 +28,38 @@ class  Controller{
         };
         
         $this -> SqlHandler = new SqlHandler();
-        echo"<h1>DONE</h1>";
     }
     
+    
+    
     public function invoke($method,$data){
-        echo "<br>called<br>method = $method data = $data<br> 
+        echo "<br>called<br>method = $method";
+        echo "data = ".print_r($data)."<br>";
 
-        prev view ".$this -> currentView."<br>";
+        $this->dataPassedToView = array();
+        
         if($method == null){
             $this->default();
         }
         else if(is_callable(array('Controller', $method))){
-            $this->$method();
+            $this->$method($data);
         }
         else{
             $this->Error("method $method not found");
         }
         
+        
+       // $this->Error("test error");
+        
         $this->DisplayView();
         $this->saveState();
         
         $this->SqlHandler->getAllUserIds();
+       
+        
         
         echo "<br>
         current view ".$this -> currentView."<br>";
-        
     }
     
  
@@ -70,13 +81,13 @@ class  Controller{
             $this->$method_name();
         }
         else{    
-            $this->views[$this->currentView]->draw("data");
+            $this->views[$this->currentView]->draw($this->dataPassedToView);
         }
         
     }
     
     private function DisplayIntroScreenView(){
-        $this->views[$this->currentView]->draw("data");
+        $this->views[$this->currentView]->draw($this->dataPassedToView);
     }
     
     
@@ -85,7 +96,21 @@ class  Controller{
     
     
     
+    
+    private function loginAttempt($data){
+        echo "loggin attempted";
+       $username = $data["username"];
+        $password  = $data ["password"];
+        echo "<br><h1>".$username."  ".$password."<br></h1>";       
+    }
    
+    
+    private function registerationAttempt($data){
+        $username = $data["username"];
+        $email = $data["email"];
+        $password = $data["password"];
+        $passwordConfirm = $data["password2"];
+    }
     
     
     private function loginButtonClicked(){
@@ -111,7 +136,6 @@ class  Controller{
             $this -> currentView = "IntroScreenView";
         };
         echo "<br>fin<br>";
-     //   echo $a."  view <br>";
     }
     
     
@@ -121,6 +145,7 @@ class  Controller{
     
     private function Error($error){
         echo "<br><h2>error! - $error</h2><br>";
+        $this->dataPassedToView["error"] = $error;
     }
     
     

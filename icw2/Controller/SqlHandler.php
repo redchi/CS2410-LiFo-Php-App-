@@ -11,9 +11,11 @@ class SqlHandler{
     
     
     public function getAllUserIds(){
-        $sql = "SELECT UserID FROM users";
+        $sql = "SELECT * FROM users";
         $result = $this->Model->queryDatabase($sql);
-        echo "<br><h1>yee yee ".$result."<br><\h1>";
+        $ids = $this->Model->processQueryResult($result, "UserID");
+        $t1 = $ids[0];
+        echo "<br><h1>yee yee ".$t1."<br></h1>";
     }
     
     
