@@ -3,7 +3,9 @@ include_once 'View/IntroScreenView.php';
 include_once 'View/ItemsTableView.php';
 include_once 'View/LoginView.php';
 include_once 'View/RegisterView.php';
-
+include_once 'View/ItemDetailsView.php';
+include_once 'View/AddItemView.php';
+include_once 'View/RequestItemView.php';
 Class View{
     
     public function __construct(){

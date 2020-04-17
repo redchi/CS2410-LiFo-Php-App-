@@ -30,6 +30,25 @@ class SqlHandler{
         $result =(int)$outputObj[0]->count;
         return $result;
     }
+    
+    public function getItem($itemID){
+        $sql = "SELECT * FROM items WHERE ItemID = :itemID;";
+        $namedParams = array("itemID"=>$itemID);
+        $resultObjs = $this->Model->queryDatabase($sql,$namedParams);
+        $itemObj = $resultObjs[0];
+        
+        $sql = "SELECT users.Username,users.Email 
+                FROM users,items,userstofounditems
+                WHERE users.UserID = userstofounditems.UserID
+                AND items.ItemID = userstofounditems.ItemID
+                AND items.ItemID = :itemID;";
+        $resultObjs = $this->Model->queryDatabase($sql,$namedParams);
+        $UserObj = $resultObjs[0];
+        
+        $returnObjs = array("item"=>$itemObj,"user"=>$UserObj);
+        return $returnObjs;
+    }
+    
 
     
 }

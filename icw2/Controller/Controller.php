@@ -19,7 +19,7 @@ class  Controller{
     
     public function __construct(){
         $viewNames = array("IntroScreenView","ItemsTableView"
-            ,"RegisterView","LoginView");
+            ,"RegisterView","LoginView","ItemDetailsView","AddItemView","RequestItemView");
         
         foreach($viewNames as $viewName){
             $view = new $viewName();
@@ -124,6 +124,26 @@ class  Controller{
     
     
     
+    
+    
+    private function addFoundItemClicked(){
+        
+    }
+    
+    
+    private function itemRowClicked($itemID){
+        echo "data passed = ".print_r($itemID)."  x= ".$itemID[0];
+      
+      $queryResult = $this->SqlHandler->getItem($itemID[0]);
+      $item = $queryResult["item"];
+      $foundByUser = $queryResult["user"];
+      
+      // add validation !
+      $this->dataPassedToView['item'] = $item;
+      $this->dataPassedToView['user'] = $foundByUser;     
+      $this -> currentView = "ItemDetailsView";
+    }
+    
     private function nextItemPageClicked($countIndex){
         $itemCountIndex = (int)$countIndex;
         echo "next item page called $itemCountIndex ";
@@ -168,10 +188,14 @@ class  Controller{
     private function backButtonClicked(){
         echo"back called";
         $v1 = array("ItemsTableView","RegisterView","LoginView");
+        $v2 = array("ItemDetailsView","AddItemView","RequestItemView");
         if(in_array($this->currentView,$v1)){
             $this -> currentView = "IntroScreenView";
-        };
-        echo "<br>fin<br>";
+        }       
+        if(in_array($this->currentView,$v2)){
+            $this -> currentView = "ItemsTableView";
+        }
+       
     }
     
     
