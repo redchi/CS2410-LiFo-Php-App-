@@ -7,16 +7,21 @@ Class RequestItemView extends View{
     
     public function draw($data){
         parent::draw($data);
-        
+        $item = $data["item"];
+        $itemName = $item->Name;
         $html = '
                 <!DOCTYPE html>
                 <html>
                 <body>
             
                 <h1> Request Item view!</h1>
-			    <br>
+			    <br><h3>
+                 item name = '.$itemName.'
                 </h3>
+                <br>
             
+
+                
             
             
                 <form action = "./index.php" method = "POST">

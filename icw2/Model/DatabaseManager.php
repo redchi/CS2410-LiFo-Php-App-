@@ -21,12 +21,15 @@ class DatabaseManager{
     }
     
     // returns objects of rows
-    public function queryDatabase($sql,$namedParams = array()){
+    public function queryDatabase($sql,$namedParams = array(),&$lastInsertedID = 0){
         $this -> connectToDatabase();
         $stmt = $this->DBConnect->prepare($sql);
         echo print_r($namedParams);
         $stmt->execute($namedParams);
-        
+        if ( strstr( $sql, 'INSERT' ) ) {
+            $lastInsertedID = $this->DBConnect->lastInsertId();
+        } 
+       
         $resultObjs = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt->closeCursor();
         $this->DBConnect = null;
@@ -123,7 +126,7 @@ class DatabaseManager{
        
         INSERT INTO Items (Name, Description, Category,Colour,Location,DateFound,PhotosFolderLoc)
         VALUES ("iteasdmtest", "desc", "catx","red","Birmingham","1000-01-01","picsads/");       
-		SELECT LAST_INSERT_ID();
+		SELECT LAST_INSERT_ID() AS LastID;
        
  
  * 

@@ -3,7 +3,7 @@
 include_once  "Controller/Controller.php";
 
 echo"<h3> post =  ".print_r($_POST)."</h3><br>";
-
+//echo "<br> file = ".$_FILES['file']["name"]."<br>";
     if(!isset($_SESSION['Controller'])){
         $Controller = new Controller();
     }

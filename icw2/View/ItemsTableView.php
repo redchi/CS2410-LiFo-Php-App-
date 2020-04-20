@@ -8,13 +8,9 @@ Class ItemsTableView extends View{
     public function draw($data){
         parent::draw($data);
         $countIndex = 0;  
-        
-        $test =  ' test = a'.' \'  '."yee";
-        echo ($test);
         if(isset($data["countIndex"])){
             $countIndex = $data["countIndex"];
         }
-        echo'asdasdasd\'';
         $allItems = $data["queryResult"];
         $tableHtml = "
             <tr>
@@ -31,19 +27,16 @@ Class ItemsTableView extends View{
             $colour = $itemObj->Colour;
             $date = $itemObj->DateFound;
             
-            $htmlRow ="<tr>".
-    			
-    
-     '<form id="item-id-'.$ID.'" method="GET" action="your-php-file-url">
-     <input type="hidden" name="your-variable-name" value='.$ID.'>
-     </form>'
-    
-    .'<tr onclick="document.getElementById(\''."item-id-$ID".'\').submit();">'."
-        <td>$name </td>
-        <td>$category </td>
-        <td>$colour</td>
-        <td>$date</td>
-        </tr>"; 
+            $htmlRow =
+            "<tr>".'<form id="item-id-'.$ID.'" method="POST" action="your-php-file-url">
+             <input type="hidden" name="itemRowClicked" value='.$ID.'>
+             </form>'
+           .'<tr onclick="document.getElementById(\''."item-id-$ID".'\').submit();">'."
+                <td>$name </td>
+                <td>$category </td>
+                <td>$colour</td>
+                <td>$date</td>
+              </tr>"; 
             
             $tableHtml = $tableHtml.$htmlRow;
         }
@@ -61,7 +54,6 @@ Class ItemsTableView extends View{
             	'.$tableHtml.'
             	</tbody>
             </table>
-
 
             <br>
             <form action = "./index.php" method = "POST">
@@ -86,8 +78,6 @@ Class ItemsTableView extends View{
             	<button type = "submit">Add an item</button>
             </form>
 
-
-
             <br>
             <form action = "./index.php" method = "POST">
             	<input type=hidden name = "backButtonClicked" value ="">
@@ -95,15 +85,8 @@ Class ItemsTableView extends View{
             </form>
             <br>
 
-
-
-
-         
-
             </body>
-        </html>
-            
-        ';
+        </html>';
         
         
         echo $html;

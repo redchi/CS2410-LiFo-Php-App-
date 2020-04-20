@@ -8,18 +8,16 @@ class  Controller{
     
     public $SqlHandler;
     
-    
-    public  $views; 
+    public $views; 
     public $pointer;
-    
-    
     
     private $currentView;    
     private $dataPassedToView;
     
     public function __construct(){
         $viewNames = array("IntroScreenView","ItemsTableView"
-            ,"RegisterView","LoginView","ItemDetailsView","AddItemView","RequestItemView");
+            ,"RegisterView","LoginView","ItemDetailsView","AddItemDetailsView"
+            ,"RequestItemView","AddItemPhotosView","SelectItemCategoryView");
         
         foreach($viewNames as $viewName){
             $view = new $viewName();
@@ -32,7 +30,8 @@ class  Controller{
     
     
     public function invoke($method,$data){
-        echo "<h2>method called = $method</h2><br>";
+        echo "<h2>method called = $method<br>
+       data passed = ".print_r($data)."  </h3> ";
 
         $this->dataPassedToView = array();
         
@@ -46,7 +45,7 @@ class  Controller{
             $this->Error("method $method not found");
         }
         $this->DisplayView();
-        $this->saveState();      
+        $this->saveState();  
         echo "<br>current view = ".$this -> currentView."<br>";
     }
     
@@ -85,13 +84,8 @@ class  Controller{
         }
         
         echo "count index ## = ".$countIndex;
-        $allItems = $this->SqlHandler->getAllItems($countIndex,$countIndex + 5); 
-        
-        
-        
+        $allItems = $this->SqlHandler->getAllItems(5,$countIndex); 
         // do validation for query result ! 5 max
-        
-        
         $this -> dataPassedToView["queryResult"] = $allItems;
         $this->views[$this->currentView]->draw($this->dataPassedToView);
     }
@@ -103,9 +97,12 @@ class  Controller{
     
     
     
+    
+    
+    
     private function loginAttempt($data){
         echo "loggin attempted";
-       $username = $data["username"];
+        $username = $data["username"];
         $password  = $data ["password"];
         echo "<br><h1>".$username."  ".$password."<br></h1>";       
     }
@@ -124,20 +121,118 @@ class  Controller{
     
     
     
-    
-    
-    private function addFoundItemClicked(){
+   // private $c;
+    private function uploadImageClicked($data){
+     
         
+        $name = $_FILES[$fileName]["name"];
+        $temp =$_FILES[$fileName]["tmp_name"];
+        echo " cx  ".print_r($_FILES[$fileName]);
+        echo " <br>size  ".$_FILES[$fileName]["size"];
+        $destination = "./UploadedImages/".$name;
+        $dest2 =  dirname(__FILE__) . "\UploadedImages\\" . $name;
+        $path="C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages\\".$name;
+        echo " <br>size  ".$dest2."<br>";
+        move_uploaded_file($temp, $path);
+       // copy($temp, $destination);
+    }
+    
+    
+    private $lastAddedItemID;
+    private function addItem($data){
+        $category = $data["Category"];
+        $name = $data["name"];
+        $colour = $data["colour"];
+        $location = $data["location"];
+        $date = $data["date"];
+        $description = $data["description"];
+        // validate then add to data base
+        $this ->lastAddedItemID =  $this->SqlHandler->addItem(array("name"=>$name,"colour"=>$colour,
+            "location"=>$location,"date"=>$date,"category"=>$category,"desc"=>$description 
+        ));
+        
+        $this->currentView = "AddItemPhotosView";
+        // validation here!AddItemPhotosView
+    }
+    
+    private function itemPhotosUploadRequest($data){
+        echo $data;
+       $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages";
+        $itemID = $this->lastAddedItemID;;
+        $allImgs = $_FILES[$data];
+        $imgCount = count($allImgs["name"]);
+        
+        // validation in this loop
+        for($i=0; $i<$imgCount; $i++){
+            $name = $allImgs["name"][$i];    
+            $type = pathinfo($name)["extension"];
+            
+            
+        }
+        
+        mkdir($path."\\".$itemID);
+        for($i=0; $i<$imgCount; $i++){
+            $temp_name = $allImgs["tmp_name"][$i];
+            $type = pathinfo($name)["extension"];        
+            $destination = $path."\\".$itemID."\\".$i.".".$type;
+            move_uploaded_file($temp_name, $destination);
+        }
+        
+        
+        $this->photosToBeuploaded = $allImgs;
+     //   $this ->dataPassedToView["Category"] = $category;
+        $this->currentView = "AddItemDetailsView";
+    }
+    
+    
+    private function uploadPhotos(){
+        echo "upload photos called ";
+        $allImgs = $this->photosToBeuploaded;
+        $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages";
+        $imgCount = count($allImgs["name"]);
+        for($i=0; $i<$imgCount; $i++){
+            $name = $allImgs["name"][$i];
+            echo "<br> name = ".$name;
+            $temp_name = $allImgs["tmp_name"][$i];
+            $destination = $path."\\".$name;
+            move_uploaded_file($temp_name, $destination);
+        }  
+  
+    }
+    
+    
+    
+    
+    
+    private function itemCategorySelected($data){
+        $category = $data["Category"];
+        $this ->dataPassedToView["Category"] = $category;
+        $this->currentView = "AddItemDetailsView";
+    }
+    
+    private function addFoundItemClicked($data){       
+        $this->currentView = "SelectItemCategoryView";
+    } 
+    
+    private function requestItemClicked($data){
+        echo "yee - "+ print_r($data);
+       // $username = $data['username'];
+        $itemID  = $data['itemID'];
+       // $username ="admin"; 
+        $queryResult = $this->SqlHandler->getItem($itemID);
+        $item = $queryResult["item"];
+        $this->dataPassedToView['item'] = $item;
+        $this->currentView = "RequestItemView";
+        //$this->c
     }
     
     
     private function itemRowClicked($itemID){
-        echo "data passed = ".print_r($itemID)."  x= ".$itemID[0];
+        echo "data passed = ".print_r($itemID)."  x= ".$itemID;
       
-      $queryResult = $this->SqlHandler->getItem($itemID[0]);
+      $queryResult = $this->SqlHandler->getItem($itemID);
       $item = $queryResult["item"];
-      $foundByUser = $queryResult["user"];
-      
+      $foundByUser = $queryResult["user"];     
       // add validation !
       $this->dataPassedToView['item'] = $item;
       $this->dataPassedToView['user'] = $foundByUser;     
@@ -169,6 +264,8 @@ class  Controller{
     }
     
     
+
+    
     private function loginButtonClicked(){
         echo"login called called";
         $this -> currentView = "LoginView"; 
@@ -188,11 +285,14 @@ class  Controller{
     private function backButtonClicked(){
         echo"back called";
         $v1 = array("ItemsTableView","RegisterView","LoginView");
-        $v2 = array("ItemDetailsView","AddItemView","RequestItemView");
+        $v2 = array("ItemDetailsView","SelectItemCategoryView","RequestItemView");
         if(in_array($this->currentView,$v1)){
             $this -> currentView = "IntroScreenView";
         }       
         if(in_array($this->currentView,$v2)){
+            $this -> currentView = "ItemsTableView";
+        }
+        else{
             $this -> currentView = "ItemsTableView";
         }
        

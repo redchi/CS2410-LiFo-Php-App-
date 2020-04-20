@@ -4,7 +4,9 @@ include_once 'View/ItemsTableView.php';
 include_once 'View/LoginView.php';
 include_once 'View/RegisterView.php';
 include_once 'View/ItemDetailsView.php';
-include_once 'View/AddItemView.php';
+include_once 'View/AddItemViews/AddItemDetailsView.php';
+include_once 'View/AddItemViews/AddItemPhotosView.php';
+include_once 'View/AddItemViews/SelectItemCategoryView.php';
 include_once 'View/RequestItemView.php';
 Class View{
     
