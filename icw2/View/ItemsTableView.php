@@ -8,10 +8,15 @@ Class ItemsTableView extends View{
     public function draw($data){
         parent::draw($data);
         $countIndex = 0;  
+        $loggedinUser = $data["loggedInUsername"];
+        $loggedin =  isset($loggedinUser);
+        
         if(isset($data["countIndex"])){
             $countIndex = $data["countIndex"];
         }
+        
         $allItems = $data["queryResult"];
+        
         $tableHtml = "
             <tr>
     			<td>Item Name </td>
@@ -27,11 +32,21 @@ Class ItemsTableView extends View{
             $colour = $itemObj->Colour;
             $date = $itemObj->DateFound;
             
+           
+            $htmlTabeRowTag= "";
+            if($loggedin == true){
+                $htmlTabeRowTag = '<tr onclick="document.getElementById(\''."item-id-$ID".'\').submit();">';
+            }
+            else{
+                $htmlTabeRowTag = '<tr>';
+            }
+            
+            
             $htmlRow =
             "<tr>".'<form id="item-id-'.$ID.'" method="POST" action="your-php-file-url">
              <input type="hidden" name="itemRowClicked" value='.$ID.'>
              </form>'
-           .'<tr onclick="document.getElementById(\''."item-id-$ID".'\').submit();">'."
+                 .$htmlTabeRowTag."
                 <td>$name </td>
                 <td>$category </td>
                 <td>$colour</td>
@@ -39,6 +54,22 @@ Class ItemsTableView extends View{
               </tr>"; 
             
             $tableHtml = $tableHtml.$htmlRow;
+        }
+        
+        $backButtonHtml = "";
+        if($loggedin == true){
+            $backButtonHtml = '     
+            <form action = "./index.php" method = "POST">
+            	<input type=hidden name = "logoutClicked" value ="">
+            	<button type = "submit">Sign out</button>
+            </form>';
+        }
+        else{
+            $backButtonHtml = '
+            <form action = "./index.php" method = "POST">
+            	<input type=hidden name = "tableViewLoginClicked" value ="">
+            	<button type = "submit">Login in</button>
+            </form>';
         }
         
         
@@ -79,10 +110,7 @@ Class ItemsTableView extends View{
             </form>
 
             <br>
-            <form action = "./index.php" method = "POST">
-            	<input type=hidden name = "backButtonClicked" value ="">
-            	<button type = "submit">back</button>
-            </form>
+            '.$backButtonHtml.'
             <br>
 
             </body>

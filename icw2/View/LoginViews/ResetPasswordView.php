@@ -1,5 +1,5 @@
 <?php
-Class RegisterView extends View{
+Class ResetPasswordView extends View{
     
     public function __construct(){
         //nothing
@@ -7,33 +7,30 @@ Class RegisterView extends View{
     
     public function draw($data){
         parent::draw($data);
-        
         $html = '
                 <!DOCTYPE html>
                 <html>
                 <body>
             
-                <h1>REGISTER VIEW!</h1>
-					<br>
-				<br>
+                <h1>LOGIN VIEW!</h1>
+            
+                <br>
                 <form action = "./index.php" method = "POST">
                   <label for="fname">Username</label><br>
-                  <input type="text" id="fname" name="username"><br>
-                  <label for="lname">email</label><br>
-                  <input type="text" id="lname" name="email"><br><br>
+                  <input type="text" name="username"><br>
                   <label for="lname">Password</label><br>
-                  <input type="password" id="lname" name="password"><br><br>
-                  <label for="lname">Confirm Password</label><br>
-                  <input type="password" id="lname" name="password2"><br><br>
-                  <input type="hidden" name = "registerationAttempt" value ="">
+                  <input type="password" name="password"><br><br>
+                  <input type="hidden" name = "loginAttempt" value ="">
                   <input type="submit" value="Submit">
-                </form> 
+                </form>
                 <br>
-
-
-
-
-                    <form action = "./index.php" method = "POST">
+            
+            
+            
+            
+            
+					<br>
+				<form action = "./index.php" method = "POST">
 					<input type=hidden name = "backButtonClicked" value ="">
 					<button type = "submit">back</button>
 				<form>

@@ -13,7 +13,7 @@ Class ItemDetailsView extends View{
         $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages";
         $dir = scandir($path,1);
         echo print_r($dir);
-        $this->drawImageSlideShow();
+   
        
         
         
@@ -28,7 +28,7 @@ Class ItemDetailsView extends View{
         $date = $itemToDisplay->DateFound;
         $picsLocation = $itemToDisplay->PhotosFolderLoc;
         
-        
+        $this->drawImageSlideShow($ID);
         $html = '
                 <!DOCTYPE html>
                 <html>
@@ -65,22 +65,29 @@ Class ItemDetailsView extends View{
     
     
     
-    private function drawImageSlideShow(){
-        $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages";
+    private function drawImageSlideShow($itemID){
+        $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages\\".$itemID;
         $folder = scandir($path,1);
         $count = count($folder) - 2;
 
         $allPicsBlockHtml = "";
+        $buttonBlockHtml = "";
+        
         for($i=0; $i<$count; $i++){
             $pic = $folder[$i];
             $picPath = $path."\\".$pic;   
             $picHtml = 
           '<div class="mySlides fade">
-            <div class="numbertext">'.$i.' / '.$count.'</div>
+            <div class="numbertext">'.($i+1).' / '.($count+1).'</div>
                 <img src="'.$picPath.'" style="width:100%">
             <div class="text"> </div>
           </div>';
             $allPicsBlockHtml = $allPicsBlockHtml.$picHtml;
+        }
+     
+        for($i=0; $i<$count; $i++){
+            $buttonHtml = '<span class="dot" onclick="currentSlide('.$i.')"></span>';
+            $buttonBlockHtml = $buttonBlockHtml . $buttonHtml;
         }
 
         $photoGalHtml=
@@ -198,10 +205,7 @@ Class ItemDetailsView extends View{
     <br>
     
     <div style="text-align:center">
-      <span class="dot" onclick="currentSlide(1)"></span> 
-      <span class="dot" onclick="currentSlide(2)"></span> 
-      <span class="dot" onclick="currentSlide(3)"></span>
-      <span class="dot" onclick="currentSlide(4)"></span>
+        '.$buttonBlockHtml.'
     </div>
     
     <script>

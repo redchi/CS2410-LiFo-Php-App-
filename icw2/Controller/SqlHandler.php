@@ -21,7 +21,25 @@ class SqlHandler{
         $sql = "SELECT * FROM users WHERE Username = :username";
         $namedParams = array("username"=>$username);
         $resultObjs = $this->Model->queryDatabase($sql,$namedParams);
-        return $resultObjs[0];
+        if(isset($resultObjs[0])){
+            return $resultObjs[0];
+        }
+        else{
+            return false;
+        }
+    }
+    
+    public function getUserByEmail($email){
+        echo "called ! email - $email";
+        $sql = "SELECT * FROM users WHERE Email = :email";
+        $namedParams = array("email"=>$email);
+        $resultObjs = $this->Model->queryDatabase($sql,$namedParams);
+        if(isset($resultObjs[0]->Username)){
+            return $resultObjs[0];
+        }
+        else{
+            return false;
+        }
     }
     
     public function getAllItems($limit,$offset){

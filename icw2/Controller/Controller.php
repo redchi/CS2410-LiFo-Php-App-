@@ -1,8 +1,8 @@
 <?php
 include_once "View/View.php";
 include_once 'Controller/SqlHandler.php';
+include_once "Controller/Mailer.php";
 
-session_start();
 class  Controller{
     
     
@@ -11,13 +11,18 @@ class  Controller{
     public $views; 
     public $pointer;
     
+    
+    private $loggedInUsername;
     private $currentView;    
     private $dataPassedToView;
+    
     
     public function __construct(){
         $viewNames = array("IntroScreenView","ItemsTableView"
             ,"RegisterView","LoginView","ItemDetailsView","AddItemDetailsView"
-            ,"RequestItemView","AddItemPhotosView","SelectItemCategoryView");
+            ,"RequestItemView","AddItemPhotosView","SelectItemCategoryView"
+            ,"ForgotPassword","ResetCodeView","ResetPasswordView"
+        );
         
         foreach($viewNames as $viewName){
             $view = new $viewName();
@@ -42,16 +47,25 @@ class  Controller{
             $this->$method($data);
         }
         else{
-            $this->Error("method $method not found");
+            // change this to server error when implemented
+            $this->userError("method $method not found");
         }
+        $this->dataPassedToView['loggedInUsername'] = $this->loggedInUsername;
         $this->DisplayView();
         $this->saveState();  
+        
+        $mailer = new Mailer();
+        $mailer->sendTestEmail();
+        
         echo "<br>current view = ".$this -> currentView."<br>";
     }
     
  
     private function default(){
         echo"default called";
+        if(isset($this->loggedInUsername)){
+            $this -> currentView = "IntroScreenView";          
+        }
         $this -> currentView = "IntroScreenView"; 
     }
     
@@ -102,18 +116,101 @@ class  Controller{
     
     private function loginAttempt($data){
         echo "loggin attempted";
-        $username = $data["username"];
+        $username = strtolower($data["username"]);
         $password  = $data ["password"];
+        $valid = true;
+        $usernameValid = true;
+        $hashedPassword= password_hash($password,PASSWORD_DEFAULT);
+        echo "<br>password = <br> $hashedPassword <br>";
+        // check if username is valid
+        if(!(preg_match('/^[a-zA-Z0-9]{5,}$/', $username))) { // for english chars + numbers only
+            // valid username, alphanumeric & longer than or equals 5 chars
+            $valid = false;
+            $usernameValid = false;
+            $errorMsg = "Username must be at least 5 characters in length and only contain alphanumerical characters";
+            $this->userError($errorMsg);
+        }
+    
+        if($usernameValid == true){
+            $userObj = $this->SqlHandler->getUser($username);
+            // check if username exits
+            if($userObj == false){
+                $valid = false;
+                $errorMsg = "Invalid Credentials";
+                $this->userError($errorMsg);
+            }
+            // if username exits check if passwords match
+            else if(password_verify($password,$userObj->HashedPassword) != 1){
+                $valid = false;
+                $errorMsg = "Invalid Credentials";
+                $this->userError($errorMsg);
+            }
+        }
+        
+        if($valid == true){
+            echo "## VALID LOGIN ##";
+            $this->loggedInUsername = $username;
+            $this->currentView = "ItemsTableView";
+        }        
+        
         echo "<br><h1>".$username."  ".$password."<br></h1>";       
     }
    
     
     private function registerationAttempt($data){
-        echo "registration attempted";
+        echo "registration attempted";           
         $username = $data["username"];
         $email = $data["email"];
         $password = $data["password"];
         $passwordConfirm = $data["password2"];
+        
+        $valid = true;   
+        $usernameValid = true;
+        $emailValid = true;
+        
+        if(!(preg_match('/^[a-zA-Z0-9]{5,}$/', $username))) { // for english chars + numbers only
+            // valid username, alphanumeric & longer than or equals 5 chars
+            $valid = false;
+            $usernameValid = false;
+            $errorMsg = "Username must be atleast 5 at least 6 characters in length ";
+            $this->userError($errorMsg);
+        }                    
+        
+        $uppercase = preg_match('@[A-Z]@', $password);
+        $lowercase = preg_match('@[a-z]@', $password);
+        $number    = preg_match('@[0-9]@', $password);
+        
+        if(!$uppercase || !$lowercase || !$number || strlen($password) < 6) {                  
+            $valid = false;
+            $errorMsg = "Password should be at least 6 characters in length and should include at least one upper case letter and one number!";
+            $this->userError($errorMsg);                  
+        }
+        
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $valid = false;
+            $emailValid = false;
+            $errorMsg = "You entered an invalid email!";
+            $this->userError($errorMsg);  
+        }
+        if(!($password === $passwordConfirm)){
+            $valid = false;
+            $errorMsg = "Your passwords dont match!";
+            $this->userError($errorMsg); 
+        }
+        if(($usernameValid == true)&& (($this->SqlHandler->getUser($username) != false))){
+            $valid = false;
+            $errorMsg = "That username is already taken!";
+            $this->userError($errorMsg); 
+        }
+        if(($emailValid == true) && (($this->SqlHandler->getUserByEmail($email) != false))){
+            $valid = false;
+            $errorMsg = "That email is already linked to another account!";
+            $this->userError($errorMsg); 
+        }
+        if($valid == true){
+            echo "VALID REG !";
+            // insert user !
+        }
         
     }
     
@@ -139,6 +236,7 @@ class  Controller{
     
     
     private $lastAddedItemID;
+    
     private function addItem($data){
         $category = $data["Category"];
         $name = $data["name"];
@@ -282,6 +380,17 @@ class  Controller{
         $this -> currentView = "ItemsTableView";    
     }
     
+    
+    private function tableViewLoginClicked(){
+        $this -> currentView = "IntroScreenView";  
+    }
+    
+    private function logoutClicked(){
+        unset($this->loggedInUsername);
+        $this -> currentView = "IntroScreenView";  
+    }
+    
+    
     private function backButtonClicked(){
         echo"back called";
         $v1 = array("ItemsTableView","RegisterView","LoginView");
@@ -293,7 +402,7 @@ class  Controller{
             $this -> currentView = "ItemsTableView";
         }
         else{
-            $this -> currentView = "ItemsTableView";
+            $this -> currentView = "IntroScreenView";
         }
        
     }
@@ -303,12 +412,20 @@ class  Controller{
     
     
     
-    private function Error($error){
+    private function userError($error){
+        $msg = "<br>* $error <br>";
+        if(isset($this->dataPassedToView["error"])){
+            $this->dataPassedToView["error"] = $this->dataPassedToView["error"] . $msg;
+        }
+        else{
+            $this->dataPassedToView["error"] =$msg;
+        }
         echo "<br><h2>error! - $error</h2><br>";
-        $this->dataPassedToView["error"] = $error;
     }
     
-    
+    private function serverError($error){
+        // kead to error page
+    }
     
 }
 ?>
