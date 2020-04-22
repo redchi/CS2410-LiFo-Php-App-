@@ -1,7 +1,7 @@
 <?php
 include_once "View/View.php";
 include_once 'Controller/SqlHandler.php';
-include_once "Controller/Mailer.php";
+//include_once "Controller/Mailer.php";
 
 class  Controller{
     
@@ -37,7 +37,9 @@ class  Controller{
     public function invoke($method,$data){
         echo "<h2>method called = $method<br>
        data passed = ".print_r($data)."  </h3> ";
-
+        if(!(isset($this -> currentView))){
+            echo"<h1> EMPTY !!</h1>";
+        }
         $this->dataPassedToView = array();
         
         if($method == null){
@@ -50,14 +52,16 @@ class  Controller{
             // change this to server error when implemented
             $this->userError("method $method not found");
         }
+        echo "<br>current view = ".$this -> currentView."<br>";
         $this->dataPassedToView['loggedInUsername'] = $this->loggedInUsername;
         $this->DisplayView();
+ 
         $this->saveState();  
         
-        $mailer = new Mailer();
-        $mailer->sendTestEmail();
+       // $mailer = new Mailer();
+        //$mailer->sendTestEmail();
         
-        echo "<br>current view = ".$this -> currentView."<br>";
+        
     }
     
  
@@ -81,7 +85,8 @@ class  Controller{
         if(is_callable(array('Controller', $method_name))){
             $this->$method_name();
         }
-        else{    
+        else{ 
+            echo("#### view = ".$this->currentView."###");
             $this->views[$this->currentView]->draw($this->dataPassedToView);
         }
         
@@ -347,6 +352,8 @@ class  Controller{
             $setIndex = $setIndex + 5;
         }
         $this->dataPassedToView['countIndex'] = $setIndex;
+        $this->currentView = "ItemsTableView";
+        echo "<br>###current view = ".$this -> currentView."<br>";
     }
     
     private function previousItemPageClicked($countIndex){
