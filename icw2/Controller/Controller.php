@@ -1,42 +1,45 @@
 <?php
 include_once "View/View.php";
 include_once 'Controller/SqlHandler.php';
-//include_once "Controller/Mailer.php";
+include_once 'Controller/SecureRandom.php';
+include_once "Controller/Mailer.php";
 
 class  Controller{
     
     
-    public $SqlHandler;
-    
-    public $views; 
-    public $pointer;
-    
-    
+    private $SqlHandler;
     private $loggedInUsername;
     private $currentView;    
     private $dataPassedToView;
+    private $Mailer;
     
+    private $passwordResetCode;
+    private $emailUsed;
     
     public function __construct(){
+        echo "**NEW CONTROLLER MADE!**";
         $viewNames = array("IntroScreenView","ItemsTableView"
             ,"RegisterView","LoginView","ItemDetailsView","AddItemDetailsView"
             ,"RequestItemView","AddItemPhotosView","SelectItemCategoryView"
-            ,"ForgotPassword","ResetCodeView","ResetPasswordView"
+            ,"ForgotPassword","ResetCodeView","ResetPasswordView","AllRequestsView"
+            ,"RequestDetailsView"
         );
         
         foreach($viewNames as $viewName){
             $view = new $viewName();
             $this->views[$viewName] = $view;
         };
-        
+        $this->Mailer = new Mailer();
         $this -> SqlHandler = new SqlHandler();
     }
     
     
     
     public function invoke($method,$data){
+        
         echo "<h2>method called = $method<br>
        data passed = ".print_r($data)."  </h3> ";
+        
         if(!(isset($this -> currentView))){
             echo"<h1> EMPTY !!</h1>";
         }
@@ -56,6 +59,14 @@ class  Controller{
         $this->dataPassedToView['loggedInUsername'] = $this->loggedInUsername;
         $this->DisplayView();
  
+        //$this->SqlHandler->getAllRequests();
+        
+        
+        
+        
+    
+        
+        
         $this->saveState();  
         
        // $mailer = new Mailer();
@@ -103,9 +114,22 @@ class  Controller{
         }
         
         echo "count index ## = ".$countIndex;
-        $allItems = $this->SqlHandler->getAllItems(5,$countIndex); 
+        $allItems = $this->SqlHandler->getAllItems(); 
         // do validation for query result ! 5 max
         $this -> dataPassedToView["queryResult"] = $allItems;
+        $this->views[$this->currentView]->draw($this->dataPassedToView);
+    }
+    
+    private function DisplayAllRequestsView(){
+        $countIndex = 0;
+        if(isset($this->dataPassedToView['countIndex'])){
+            $countIndex = $this->dataPassedToView['countIndex'];
+        }
+        
+        echo "count index ## = ".$countIndex;
+        $allObjs = $this->SqlHandler->getAllRequests(5,$countIndex);
+        // do validation for query result ! 5 max
+        $this -> dataPassedToView["queryResult"] = $allObjs;
         $this->views[$this->currentView]->draw($this->dataPassedToView);
     }
     
@@ -116,6 +140,77 @@ class  Controller{
     
     
     
+    
+    private function approveRequest($RID){
+        
+        $resultObjs = $this->SqlHandler->getRequestAndRelatedObjs($RID);
+        $item = $resultObjs["item"];     
+        $user = $resultObjs["user"];
+        $request = $resultObjs["request"];
+        
+        $itemID =$item->ItemID;
+        $email = $user->Email;
+        $this->SqlHandler->deleteRequestAndRelatedObjs($RID, $itemID);
+        // send email
+        $this->Mailer->sendRequrestApprovedEmail($item, $email);
+        
+        $dirname ="C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages\\".$itemID;
+        if(file_exists($dirname)){
+            array_map('unlink', glob("$dirname/*.*"));
+            rmdir($dirname);
+        }
+    }
+    
+    private function denyRequest($RID){
+        $resultObjs  = $this->SqlHandler->getRequestAndRelatedObjs($RID);
+        $item = $resultObjs["item"];
+        $user = $resultObjs["user"];
+        $request = $resultObjs["request"];
+        
+        $this->SqlHandler->deleteRequest($RID);
+        
+    }
+    
+    private function nextPageOnRTableClicked($countIndex){
+        $itemCountIndex = (int)$countIndex;
+        echo "next item page called $itemCountIndex ";
+        
+        $maxCount = $this->SqlHandler->getAllRequestsCount();
+        $setIndex = $itemCountIndex;
+        
+        if($maxCount - ($itemCountIndex+5)>0){
+            $setIndex = $setIndex + 5;
+        }
+        
+        $this->dataPassedToView['countIndex'] = $setIndex;
+      //  $this->currentView = "ItemsTableView";
+        echo "<br>###current view = ".$this -> currentView."<br>";      
+    }
+    
+    private function prevPageOnRTableClicked($countIndex){
+        $itemCountIndex = (int)$countIndex;
+        echo "prev item page called $itemCountIndex ";
+        
+        // $maxCount = $this->SqlHandler->getAllItemsCount();
+        $setIndex = $itemCountIndex;
+        if($itemCountIndex - 5>=0){
+            $setIndex = $setIndex - 5;
+        }
+        $this->dataPassedToView['countIndex'] = $setIndex;
+    }
+    
+    
+    
+    
+    private function requestTableRowClicked($requestID){
+        $this->currentView = "RequestDetailsView";
+        $resultObjs = $this->SqlHandler->getRequestAndRelatedObjs($requestID);
+        $this->dataPassedToView["request"] = $resultObjs;
+    }
+    
+    private function viewAllRequestsClicked(){
+        $this->currentView= "AllRequestsView";
+    }
     
     
     
@@ -161,6 +256,78 @@ class  Controller{
         echo "<br><h1>".$username."  ".$password."<br></h1>";       
     }
    
+    
+    private function forgotPasswordClicked($data){
+        $this->currentView = "ForgotPassword";
+    }
+    
+    
+    private function emailSubmitForPasswordReset($data){
+        $email = $data["email"];
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errorMsg = "You entered an invalid email!";
+            $this->userError($errorMsg);
+        }
+        else{
+            //generate new entry in forgotpassword table
+            //send email
+            if($this->SqlHandler->getUserByEmail($email) != false){
+                // user exits
+                $code = SecureRandom::getToken(6);
+                $this->Mailer->sendPasswordResetCodeEmail($code, $email);
+                $this->passwordResetCode = $code;
+                $this->emailUsed = $email;
+                $this->currentView = "ResetCodeView";
+            }
+            else{
+                $errorMsg = "No account is registered to this email!s";
+                $this->userError($errorMsg);
+            }
+            
+        }
+    }
+    
+    private function resetCodeEntered($data){
+        $enteredResetcode = $data["resetCode"];
+        if($enteredResetcode == $this->passwordResetCode){
+            $this->currentView = "ResetPasswordView";           
+        }
+        else{
+            $errorMsg = "Invalid Reset Code";
+            $this->userError($errorMsg);
+        }
+        
+    }
+    
+    private function newPasswordEntered($data){
+        $password = $data["password"];
+        $confirmPassword = $data["password2"];
+        $email = $this->emailUsed;
+        
+        $uppercase = preg_match('@[A-Z]@', $password);
+        $lowercase = preg_match('@[a-z]@', $password);
+        $number    = preg_match('@[0-9]@', $password);
+        
+        if(!$uppercase || !$lowercase || !$number || strlen($password) < 6) {
+            $errorMsg = "Password should be at least 6 characters in length and should include at least one upper case letter and one number!";
+            $this->userError($errorMsg);
+        }
+        else if($password != $confirmPassword){
+            $errorMsg = "Passwords dont match!";
+            $this->userError($errorMsg);
+        }
+        else{
+            // update password - not gonna be loged in 
+            $userID = $this->SqlHandler->getUserByEmail($email)->UserID;
+            $hashedPassword= password_hash($password,PASSWORD_DEFAULT);
+            $this->SqlHandler->updateUserPassword($userID, $hashedPassword);
+            echo "PASSWORD RESET!!!!!";
+        }
+        
+    }
+    
+    
+    
     
     private function registerationAttempt($data){
         echo "registration attempted";           
@@ -214,19 +381,28 @@ class  Controller{
         }
         if($valid == true){
             echo "VALID REG !";
-            // insert user !
+            $hashedPassword= password_hash($password,PASSWORD_DEFAULT);
+            $this->SqlHandler->insertUser($username, $email, $hashedPassword);
+            // lead to home page
         }
         
     }
     
     
     
+    private function requestClicked($data){
+        $requestDesc = $data["request"];
+        $itemID = $data["itemID"];
+        $userID = $this->SqlHandler->getUser($this->loggedInUsername)->UserID;
+        $this->SqlHandler->insertRequest($requestDesc, $itemID, $userID);
+        echo "request processed yee yee!";        
+    }
+    
     
     
    // private $c;
     private function uploadImageClicked($data){
-     
-        
+            
         $name = $_FILES[$fileName]["name"];
         $temp =$_FILES[$fileName]["tmp_name"];
         echo " cx  ".print_r($_FILES[$fileName]);

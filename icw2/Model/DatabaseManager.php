@@ -39,47 +39,6 @@ class DatabaseManager{
    
     
     
-    public function x1(){
-        $this -> connectToDatabase();
-        $sql = "SELECT * FROM items WHERE Name = :name  LIMIT :x1;";
-        $in = 2;
-        if(gettype($in) == "integer"){
-            echo "yeeeeeeeeeee";
-        }
-        
-     
-        
-        $namedParams = array("x1"=>2,"name"=>"itemtest");
-        
-        $stmt = $this->DBConnect->prepare($sql);
-        
-        
-//         foreach(array_keys($namedParams) as $key){
-//             $value = $namedParams[$key];
-//             echo "<br><h1>key = $key  val = $value<br></h1>";
-//             if(gettype($value) == "integer"){
-//                 $stmt->bindParam($key, $value, PDO::PARAM_INT);
-//                 unset($namedParams[$key]);
-//                 echo "<h1>passed</h1>";
-//             }
-//         }
-        
-        
-        
-        
-        echo "<br> lr".print_r(array_keys($namedParams))." e<br>";
-        
-        
-        $stmt->execute($namedParams);
-        $stmt->debugDumpParams();
-        echo "<br> ##1<br>";
-        $resultObjs = $stmt->fetchAll(PDO::FETCH_OBJ);
-        foreach($resultObjs as $obj){
-            echo "<br> name = ".$obj->Name;
-        }
-        $stmt->closeCursor();
-        $this->DBConnect = null;
-    }
 
     
     
@@ -114,11 +73,25 @@ class DatabaseManager{
         CREATE TABLE UsersToFoundItems (
             ItemID int NOT NULL,
            	UserID int NOT NULL,      
-           	CONSTRAINT ItemID_FK FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON DELETE CASCADE    
+           	CONSTRAINT ItemID_FK FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON DELETE CASCADE,    
+            CONSTRAINT UserID_FK FOREIGN KEY (UserID) REFERENCES users (UserID) ON DELETE CASCADE
+        );
+        
+        CREATE TABLE Requests(
+            RequestID int NOT NULL,
+      		Description varchar(1000)NOT NULL,
+            PRIMARY KEY(RequestID);
         );
        
-       
-       
+         CREATE TABLE RequestsToUserAndItem (
+            RequestID int NOT NULL,
+      		ItemID int NOT NULL,
+           	UserID int NOT NULL,	
+           	CONSTRAINT ItemID_FK2 FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON DELETE CASCADE,
+      		CONSTRAINT RequestID_FK FOREIGN KEY (RequestID) REFERENCES requests (RequestID) ON DELETE CASCADE,
+            CONSTRAINT UserID_FK2 FOREIGN KEY (UserID) REFERENCES users (UserID) ON DELETE CASCADE
+        );
+        
        INSERT INTO Items (Name, Description, Category,Colour,Location,DateFound,PhotosFolderLoc)
         VALUES ("itemtest", "desc", "catx","red",Birmingham,"1000-01-01","pics/");     
        

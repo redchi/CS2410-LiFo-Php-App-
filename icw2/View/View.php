@@ -11,6 +11,9 @@ include_once 'View/LoginViews/LoginView.php';
 include_once 'View/LoginViews/RegisterView.php';
 include_once 'View/LoginViews/ResetCodeView.php';
 include_once 'View/LoginViews/ResetPasswordView.php';
+include_once 'View/AllRequestsView.php';
+include_once 'View/RequestDetailsView.php';
+
 
 Class View{
     

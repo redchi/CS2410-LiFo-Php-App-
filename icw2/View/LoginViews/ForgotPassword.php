@@ -12,15 +12,12 @@ Class ForgotPassword extends View{
                 <html>
                 <body>
             
-                <h1>LOGIN VIEW!</h1>
+                <h1>FORGOT PASSWORD VIEW!</h1>
             
                 <br>
                 <form action = "./index.php" method = "POST">
-                  <label for="fname">Username</label><br>
-                  <input type="text" name="username"><br>
-                  <label for="lname">Password</label><br>
-                  <input type="password" name="password"><br><br>
-                  <input type="hidden" name = "loginAttempt" value ="">
+                  <input type="text" name="email" placeholder =email required><br>
+                  <input type="hidden" name = "emailSubmitForPasswordReset" value ="">
                   <input type="submit" value="Submit">
                 </form>
                 <br>

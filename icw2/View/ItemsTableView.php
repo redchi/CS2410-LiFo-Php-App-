@@ -109,6 +109,12 @@ Class ItemsTableView extends View{
             	<button type = "submit">Add an item</button>
             </form>
 
+              <br>
+            <form action = "./index.php" method = "POST">
+            	<input type=hidden name = "viewAllRequestsClicked" value ="">
+            	<button type = "submit">admin view all requests</button>
+            </form>
+
             <br>
             '.$backButtonHtml.'
             <br>

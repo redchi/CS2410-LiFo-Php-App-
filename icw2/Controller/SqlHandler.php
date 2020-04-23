@@ -17,6 +17,9 @@ class SqlHandler{
         }
     }
     
+    
+    
+    
     public function getUser($username){
         $sql = "SELECT * FROM users WHERE Username = :username";
         $namedParams = array("username"=>$username);
@@ -27,6 +30,13 @@ class SqlHandler{
         else{
             return false;
         }
+    }
+    
+    public function getUserByID($ID){
+        $sql = "SELECT * FROM users WHERE UserID = :userID";
+        $namedParams = array("userID"=>$ID);
+        $resultObjs = $this->Model->queryDatabase($sql,$namedParams);
+        return $resultObjs[0];
     }
     
     public function getUserByEmail($email){
@@ -42,9 +52,16 @@ class SqlHandler{
         }
     }
     
-    public function getAllItems($limit,$offset){
-        $sql = "SELECT * FROM items LIMIT :limit OFFSET :offset;";
-        $namedParams = array("limit"=>$limit,"offset"=>$offset);
+    public function updateUserPassword($UserID,$newHashedPassword){
+        $sql = "UPDATE users SET HashedPassword=:newPassword WHERE UserID = :userID;";
+        $namedParams = array("newPassword"=>$newHashedPassword,"userID"=>$UserID);
+        $this->Model->queryDatabase($sql,$namedParams);
+    }
+    
+    
+    public function getAllItems(){
+        $sql = "SELECT * FROM items;";
+       // $namedParams = array("limit"=>$limit,"offset"=>$offset);
         $resultObjs = $this->Model->queryDatabase($sql,$namedParams);
         return $resultObjs;
     }
@@ -54,6 +71,12 @@ class SqlHandler{
         $outputObj =$this->Model->queryDatabase($sql);
         $result =(int)$outputObj[0]->count;
         return $result;
+    }
+    
+    public function insertUser($username,$email,$hashedPassword){
+       $sql = "INSERT INTO users ( Username, Email, HashedPassword) VALUES (:username,:email,:pwd)"; 
+       $namedParams = array("username"=>$username,"email"=>$email,"pwd"=>$hashedPassword);
+       $this->Model->queryDatabase($sql,$namedParams);
     }
     
     public function getItem($itemID){
@@ -119,6 +142,86 @@ class SqlHandler{
 
     }
     
+    
+    public function insertRequest($requestDescription,$requestedItemID,$requesterUserID){
+        $sql = "INSERT INTO requests (Description) VALUES (:requestDesc)";
+        $namedParams = array("requestDesc"=>$requestDescription);
+        $RequestID = 0;
+        $this->Model->queryDatabase($sql,$namedParams,$RequestID);   
+        $sql = "INSERT INTO requeststouseranditem (RequestID, ItemID, UserID) VALUES (:requestID,:itemID,:userID);";
+        $namedParams = array("requestID"=>$RequestID,"itemID"=>$requestedItemID,"userID"=>$requesterUserID);
+        $this->Model->queryDatabase($sql,$namedParams);
+    }
+    
+    public function getRequest($RequestID){
+        $sql = "SELECT * FROM requests WHERE RequestID = :requestID";
+        $namedParams = array("requestID"=>$RequestID);
+        $resultObjs = $this->Model->queryDatabase($sql,$namedParams); 
+        return $resultObjs[0];
+    }
+    
+    public function getRequestAndRelatedObjs($RequestID){
+        $sql = "SELECT * FROM  requeststouseranditem WHERE RequestID = :requestID";
+        $namedParams = array("requestID"=>$RequestID);
+        $resultObjs = $this->Model->queryDatabase($sql,$namedParams); 
+        $obj = $resultObjs[0];
+        $userID = $obj->UserID;
+        $itemID = $obj->ItemID;
+        $requestID = $obj->RequestID;
+        $user  = $this->getUserByID($userID);
+        $item = $this->getItem($itemID);
+        $request = $this->getRequest($requestID);
+        $entry = array("item"=>$item["item"],"user"=>$user,"request"=>$request);
+        return $entry;
+        
+    }
+    
+    public function getAllRequestsCount(){
+        $sql = "SELECT COUNT(RequestID) AS count FROM requests;";
+        $outputObj =$this->Model->queryDatabase($sql);
+        $result =(int)$outputObj[0]->count;
+        return $result;
+    }
+    
+    public function getAllRequests($limit,$offset){
+        $sql = "SELECT * FROM requeststouseranditem LIMIT :limit OFFSET :offset;";
+        $namedParams = array("limit"=>$limit,"offset"=>$offset);
+        $resultObjs = $this->Model->queryDatabase($sql,$namedParams);  
+       
+        $outputArray = array();
+        foreach($resultObjs as $obj){
+            $userID = $obj->UserID;
+            $itemID = $obj->ItemID;
+            $requestID = $obj->RequestID;
+            $user  = $this->getUserByID($userID);
+            $item = $this->getItem($itemID);
+            $request = $this->getRequest($requestID);
+            $entry = array("item"=>$item["item"],"user"=>$user,"request"=>$request);
+            echo "<br><br> #### START";
+            echo print_r($entry);
+            echo "<br><br>";
+            
+            array_push($outputArray,$entry);
+        }
+        echo print_r($outputArray);
+        return $outputArray;
+    }
+    
+    
+    public function deleteRequestAndRelatedObjs($requestID,$itemID){
+        $sql = "DELETE FROM requests WHERE RequestID = :requestID";
+        $namedParams = array("requestID"=>$requestID);
+        $this->Model->queryDatabase($sql,$namedParams);
+        $sql = "DELETE FROM items WHERE ItemID =:itemID";
+        $namedParams = array("itemID"=>$itemID);
+        $this->Model->queryDatabase($sql,$namedParams);
+    }
+    
+    public function deleteRequest($requestID){
+        $sql = "DELETE FROM requests WHERE RequestID = :requestID";
+        $namedParams = array("requestID"=>$requestID);
+        $this->Model->queryDatabase($sql,$namedParams);
+    }
 }
 
 

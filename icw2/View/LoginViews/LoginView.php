@@ -28,12 +28,17 @@ Class LoginView extends View{
 
 
 
-
+		         <br>
+				<form action = "./index.php" method = "POST">
+					<input type=hidden name = "forgotPasswordClicked" value ="">
+					<button type = "submit">Forgot password</button>
+				</form>
+				<br>
 					<br>
 				<form action = "./index.php" method = "POST">
 					<input type=hidden name = "backButtonClicked" value ="">
 					<button type = "submit">back</button>
-				<form>
+				</form>
 				<br>
             
             

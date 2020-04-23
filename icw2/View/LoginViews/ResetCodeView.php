@@ -16,11 +16,8 @@ Class ResetCodeView extends View{
             
                 <br>
                 <form action = "./index.php" method = "POST">
-                  <label for="fname">Username</label><br>
-                  <input type="text" name="username"><br>
-                  <label for="lname">Password</label><br>
-                  <input type="password" name="password"><br><br>
-                  <input type="hidden" name = "loginAttempt" value ="">
+                  <input type="text" name="resetCode" placeholder = "Reset Code"><br>
+                  <input type="hidden" name = "resetCodeEntered" value ="">
                   <input type="submit" value="Submit">
                 </form>
                 <br>
