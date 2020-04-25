@@ -1,18 +1,18 @@
 <?php
 include_once 'View/IntroScreenView.php';
-include_once 'View/ItemsTableView.php';
-include_once 'View/ItemDetailsView.php';
+include_once 'View/ItemViews/ItemsTableView.php';
+include_once 'View/ItemViews/ItemDetailsView.php';
 include_once 'View/AddItemViews/AddItemDetailsView.php';
 include_once 'View/AddItemViews/AddItemPhotosView.php';
 include_once 'View/AddItemViews/SelectItemCategoryView.php';
-include_once 'View/RequestItemView.php';
+include_once 'View/ItemViews//RequestItemView.php';
 include_once 'View/LoginViews/ForgotPassword.php';
 include_once 'View/LoginViews/LoginView.php';
 include_once 'View/LoginViews/RegisterView.php';
 include_once 'View/LoginViews/ResetCodeView.php';
 include_once 'View/LoginViews/ResetPasswordView.php';
-include_once 'View/AllRequestsView.php';
-include_once 'View/RequestDetailsView.php';
+include_once 'View/RequestViews/AllRequestsView.php';
+include_once 'View/RequestViews/RequestDetailsView.php';
 include_once 'View/HomeView.php';
 
 Class View{

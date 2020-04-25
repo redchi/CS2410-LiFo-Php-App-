@@ -9,8 +9,6 @@ session_start();
 define('URL', 'http://localhost/icw2');
 
 
-$requestedView = $_GET["requestedView"];
-$requests = explode("/", $requestedView);
 echo"<h3> requestedView =  ".print_r($requests)."</h3><br>";
 
 
@@ -25,10 +23,14 @@ else{
 }
 
 
+
+
 if(empty($requestedView)){
     echo "not set";
 }
 
+    $requestedView = $_GET["requestedView"];
+    $requests = explode("/", $requestedView);
     $firstReq = strtolower($requests[0]);
     $secondReq = strtolower($requests[1]);
     $count = count($requests);
@@ -132,6 +134,9 @@ if(empty($requestedView)){
         }
     }
     
+    
+    
+    
     elseif($firstReq == "view_item_request" && $count == 2){
         if($isadmin == true){
             $dataPassed = array("requestID" =>$secondReq);
@@ -163,17 +168,17 @@ function processUserinteractionData($Controller){
                 unset($_POST[$key]);
             }
         }
-        $Controller->invoke($method_name,$_POST);
+        $Controller->UserInteractionHandle($method_name,$_POST);
     }
     
     else if(count(array_keys($_POST)) == 1){
         $method_name = key($_POST);
         $data = $_POST[$method_name];
-        $Controller ->invoke($method_name, $data);
+        $Controller ->UserInteractionHandle($method_name, $data);
     }
     
     else {
-        $Controller ->invoke(null, null);
+        $Controller ->UserInteractionHandle(null, null);
     }
     // echo"##x3##".$Controller->currentView;
     $_POST = array(); 

@@ -13,21 +13,13 @@ Class IntroScreenView extends View{
                 <body>
             
                 <h1>Lost and Found System!</h1>
-                <form action = "./index.php" method = "POST">
-					<input type=hidden name = "loginButtonClicked" value ="">
+                <form action = "'.URL.'/Login">
 					<button type = "submit">Login</button>
 				</form>
 				<br>
-				<form action = "./index.php" method = "POST">
-					<input type=hidden name = "registerButtonClicked" value ="">
+				<form action = "'.URL.'/Register">				
 					<button type = "submit">Register</button>
 				</form>
-				<br>
-				<form action = "./index.php" method = "POST">
-					<input type=hidden name = "guestButtonClicked" value ="">
-					<button type = "submit">Continue as guest</button>
-				</form>
-				<br>
 
 
                 </body>

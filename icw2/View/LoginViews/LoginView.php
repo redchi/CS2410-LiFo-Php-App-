@@ -15,7 +15,7 @@ Class LoginView extends View{
                 <h1>LOGIN VIEW!</h1>
 
                 <br>
-                <form action = "./index.php" method = "POST">
+                <form action = "'.URL."/UserInteraction".'" method = "POST">
                   <label for="fname">Username</label><br>
                   <input type="text" name="username"><br>
                   <label for="lname">Password</label><br>
@@ -25,19 +25,10 @@ Class LoginView extends View{
                 </form> 
                 <br>
 
-
-
-
 		         <br>
-				<form action = "./index.php" method = "POST">
+				<form action = "'.URL."/forgot_password".'>
 					<input type=hidden name = "forgotPasswordClicked" value ="">
 					<button type = "submit">Forgot password</button>
-				</form>
-				<br>
-					<br>
-				<form action = "./index.php" method = "POST">
-					<input type=hidden name = "backButtonClicked" value ="">
-					<button type = "submit">back</button>
 				</form>
 				<br>
             

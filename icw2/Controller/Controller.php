@@ -42,9 +42,12 @@ class  Controller{
         return (!empty($this->loggedInUsername));
     }
     
+    
     public function isUserAdmin(){
         return ($this->isUserSignedIn == true && $this->loggedInUsername =="admin");
     }
+    
+    
     public function displayView($viewName,$viewParams = array()){
         echo " display view called $viewName ";
         $method_name = "Display".$viewName;
@@ -60,10 +63,11 @@ class  Controller{
         }
         
         $this->currentView = $viewName;
+        $this->dataPassedToView = array();
         $this->saveState();  
     }
     
-    public function invoke($method,$data){
+    public function UserInteractionHandle($method,$data){
         
         echo "<h2>method called = $method<br>
        data passed = ".print_r($data)."  </h3> ";
@@ -71,7 +75,8 @@ class  Controller{
         if(!(isset($this -> currentView))){
             echo"<h1> EMPTY !!</h1>";
         }
-        $this->dataPassedToView = array();
+        
+      
         
         if($method == null){
             $this->default();
@@ -85,16 +90,10 @@ class  Controller{
         }
         echo "<br>current view = ".$this -> currentView."<br>";
         $this->dataPassedToView['loggedInUsername'] = $this->loggedInUsername;
-        $this->DisplayView();
+        //$this->DisplayView();
  
         //$this->SqlHandler->getAllRequests();
-        
-        
-        
-        
-    
-        
-        
+ 
         $this->saveState();  
         
        // $mailer = new Mailer();
@@ -125,7 +124,7 @@ class  Controller{
 //     }
     
     private function DisplayIntroScreenView(){
-        $this->views[$this->currentView]->draw($this->dataPassedToView);
+        $this->views[IntroScreenView]->draw($this->dataPassedToView);
     }
     
     private function DisplayItemsTableView(){
@@ -138,7 +137,7 @@ class  Controller{
         $allItems = $this->SqlHandler->getAllItems(); 
         // do validation for query result ! 5 max
         $this -> dataPassedToView["queryResult"] = $allItems;
-        $this->views[$this->currentView]->draw($this->dataPassedToView);
+        $this->views[ItemsTableView]->draw($this->dataPassedToView);
     }
     
     private function DisplayAllRequestsView(){
@@ -276,6 +275,7 @@ class  Controller{
             echo "## VALID LOGIN ##";
             $this->loggedInUsername = $username;
             $this->currentView = "ItemsTableView";
+            gotoView("/Home");
         }        
         
         echo "<br><h1>".$username."  ".$password."<br></h1>";       
@@ -424,21 +424,7 @@ class  Controller{
     }
     
     
-    
-   // private $c;
-    private function uploadImageClicked($data){
-            
-        $name = $_FILES[$fileName]["name"];
-        $temp =$_FILES[$fileName]["tmp_name"];
-        echo " cx  ".print_r($_FILES[$fileName]);
-        echo " <br>size  ".$_FILES[$fileName]["size"];
-        $destination = "./UploadedImages/".$name;
-        $dest2 =  dirname(__FILE__) . "\UploadedImages\\" . $name;
-        $path="C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages\\".$name;
-        echo " <br>size  ".$dest2."<br>";
-        move_uploaded_file($temp, $path);
-       // copy($temp, $destination);
-    }
+  
     
     
     private $lastAddedItemID;
@@ -465,7 +451,7 @@ class  Controller{
         $itemID = $this->lastAddedItemID;;
         $allImgs = $_FILES[$data];
         $imgCount = count($allImgs["name"]);
-        
+        valid = true;
         // validation in this loop
         for($i=0; $i<$imgCount; $i++){
             $name = $allImgs["name"][$i];    
