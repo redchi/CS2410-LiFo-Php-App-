@@ -6,15 +6,19 @@ include_once "Controller/Mailer.php";
 
 class  Controller{
     
+    private $views;
+    private $currentView;
+    private $dataPassedToView;
+    
     
     private $SqlHandler;
     private $loggedInUsername;
-    private $currentView;    
-    private $dataPassedToView;
-    private $Mailer;
+    private $Mailer;  
     
     private $passwordResetCode;
     private $emailUsed;
+  
+    //private $isUserAdmin;
     
     public function __construct(){
         echo "**NEW CONTROLLER MADE!**";
@@ -22,7 +26,7 @@ class  Controller{
             ,"RegisterView","LoginView","ItemDetailsView","AddItemDetailsView"
             ,"RequestItemView","AddItemPhotosView","SelectItemCategoryView"
             ,"ForgotPassword","ResetCodeView","ResetPasswordView","AllRequestsView"
-            ,"RequestDetailsView"
+            ,"RequestDetailsView","HomeView"
         );
         
         foreach($viewNames as $viewName){
@@ -33,7 +37,31 @@ class  Controller{
         $this -> SqlHandler = new SqlHandler();
     }
     
+    public function isUserSignedIn(){
+        echo "#######called usi##############";
+        return (!empty($this->loggedInUsername));
+    }
     
+    public function isUserAdmin(){
+        return ($this->isUserSignedIn == true && $this->loggedInUsername =="admin");
+    }
+    public function displayView($viewName,$viewParams = array()){
+        echo " display view called $viewName ";
+        $method_name = "Display".$viewName;
+        
+        if(is_callable(array('Controller', $method_name))){
+            echo "##x1";
+            $this->$method_name();
+        }
+        else{
+            echo "##x2";
+            echo("<br>#### view = ".$viewName."###");
+            $this->views[$viewName]->draw($this->dataPassedToView);
+        }
+        
+        $this->currentView = $viewName;
+        $this->saveState();  
+    }
     
     public function invoke($method,$data){
         
@@ -91,29 +119,22 @@ class  Controller{
     
     
     
-    private function DisplayView(){
-        $method_name = "Display".$this->currentView;   
-        if(is_callable(array('Controller', $method_name))){
-            $this->$method_name();
-        }
-        else{ 
-            echo("#### view = ".$this->currentView."###");
-            $this->views[$this->currentView]->draw($this->dataPassedToView);
-        }
+//     private function DisplayView(){
+
         
-    }
+//     }
     
     private function DisplayIntroScreenView(){
         $this->views[$this->currentView]->draw($this->dataPassedToView);
     }
     
     private function DisplayItemsTableView(){
-        $countIndex = 0;
+        //$countIndex = 0;
         if(isset($this->dataPassedToView['countIndex'])){
             $countIndex = $this->dataPassedToView['countIndex'];
         }
         
-        echo "count index ## = ".$countIndex;
+       // echo "count index ## = ".$countIndex;
         $allItems = $this->SqlHandler->getAllItems(); 
         // do validation for query result ! 5 max
         $this -> dataPassedToView["queryResult"] = $allItems;
@@ -137,9 +158,13 @@ class  Controller{
     
     
     
+//     private function goto($relativePath){
+//        $path =  "./$relativePath";
+//        header('Location: '.$path);
+//        exit;
+//     }
     
-    
-    
+ 
     
     private function approveRequest($RID){
         
