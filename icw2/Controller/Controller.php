@@ -447,31 +447,45 @@ class  Controller{
     
     private function itemPhotosUploadRequest($data){
         echo $data;
-       $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages";
+        // SRROUND WITH TRY CATCH
+        $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages";
         $itemID = $this->lastAddedItemID;;
         $allImgs = $_FILES[$data];
         $imgCount = count($allImgs["name"]);
-        valid = true;
+        $valid = true;
+        $imgTypes = array("jpeg","jpg","png");
         // validation in this loop
-        for($i=0; $i<$imgCount; $i++){
-            $name = $allImgs["name"][$i];    
-            $type = pathinfo($name)["extension"];
+        if($imgCount>10){
+            $valid = false;
+            $errorMsg = "maximum of 10 image allowed";
+            $this->userError($errorMsg);
+        }
+        for($i=0; $i<$imgCount && $valid == true; $i++){
+            $name = $allImgs["name"][$i];
+            $type = strtolower(pathinfo($name)["extension"]);
+            $size = $allImgs["size"][$i];
+            if(in_array($type, $imgTypes) == false){
+                $valid = false;
+                $errorMsg = "a file was not of type png or jpeg";
+                $this->userError($errorMsg);
+            }
+            
+            echo "<br>type = $type<br>";
+            echo "size = $size<br>";
+        }
+        if($valid == true){
+            mkdir($path."\\".$itemID);
+            for($i=0; $i<$imgCount; $i++){
+                $temp_name = $allImgs["tmp_name"][$i];
+                $type = pathinfo($name)["extension"];
+                $destination = $path."\\".$itemID."\\".$i.".".$type;
+                move_uploaded_file($temp_name, $destination);
+            }
             
             
+            $this->photosToBeuploaded = $allImgs;
+            $this->currentView = "AddItemDetailsView";
         }
-        
-        mkdir($path."\\".$itemID);
-        for($i=0; $i<$imgCount; $i++){
-            $temp_name = $allImgs["tmp_name"][$i];
-            $type = pathinfo($name)["extension"];        
-            $destination = $path."\\".$itemID."\\".$i.".".$type;
-            move_uploaded_file($temp_name, $destination);
-        }
-        
-        
-        $this->photosToBeuploaded = $allImgs;
-     //   $this ->dataPassedToView["Category"] = $category;
-        $this->currentView = "AddItemDetailsView";
     }
     
     
