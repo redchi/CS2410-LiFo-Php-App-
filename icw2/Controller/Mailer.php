@@ -44,7 +44,7 @@ class Mailer{
     private function sendEmail($title,$body,$sendTo){
         require_once 'ThirdPartyScripts/PhpMailer/PHPMailerAutoload.php';
         // $itemname = "yeee item";
-        
+      
         $mail = new PHPMailer();
         $mail->IsSMTP(); // enable SMTP
         
@@ -78,6 +78,9 @@ class Mailer{
     
     
     
+    public function sendRegistrationConfirmationEmail($username,$emailTo){
+        
+    }
     
     public function sendPasswordResetCodeEmail($resetCode,$emailTo){
         $body = $this->getPasswordResetHtmlBody($resetCode);

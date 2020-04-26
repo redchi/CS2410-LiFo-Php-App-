@@ -38,7 +38,7 @@ Class RequestDetailsView extends View{
 				</form>
                 <br>
 				<form action = "/UserInteraction" method = "POST">
-					<input type=hidden name = "guestButtonClicked" value ="">
+					<input type=hidden name = "denyRequest" value ="">
 					<button type = "submit">Deny</button>
 				</form>
 				<br>

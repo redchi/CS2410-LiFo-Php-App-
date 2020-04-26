@@ -86,7 +86,7 @@ class  Controller{
         }
         else{
             // change this to server error when implemented
-            $this->userError("method $method not found");
+            $this->popUpMsg("method $method not found");
         }
         echo "<br>current view = ".$this -> currentView."<br>";
         $this->dataPassedToView['loggedInUsername'] = $this->loggedInUsername;
@@ -220,7 +220,7 @@ class  Controller{
  
     
     private function approveRequest($RID){
-        echo "X1 CALLED";
+     
         $resultObjs = $this->SqlHandler->getRequestAndRelatedObjs($RID);
         $item = $resultObjs["item"];     
         $user = $resultObjs["user"];
@@ -236,6 +236,7 @@ class  Controller{
         if(file_exists($dirname)){
             array_map('unlink', glob("$dirname/*.*"));
             rmdir($dirname);
+            gotoView("/Home");
         }
     }
     
@@ -278,7 +279,7 @@ class  Controller{
             $valid = false;
             $usernameValid = false;
             $errorMsg = "Username must be at least 5 characters in length and only contain alphanumerical characters";
-            $this->userError($errorMsg);
+            $this->popUpMsg($errorMsg);
         }
     
         if($usernameValid == true){
@@ -287,13 +288,13 @@ class  Controller{
             if($userObj == false){
                 $valid = false;
                 $errorMsg = "Invalid Credentials";
-                $this->userError($errorMsg);
+                $this->popUpMsg($errorMsg);
             }
             // if username exits check if passwords match
             else if(password_verify($password,$userObj->HashedPassword) != 1){
                 $valid = false;
                 $errorMsg = "Invalid Credentials";
-                $this->userError($errorMsg);
+                $this->popUpMsg($errorMsg);
             }
         }
         
@@ -317,37 +318,41 @@ class  Controller{
     
     private function emailSubmitForPasswordReset($data){
         $email = $data["email"];
+        $valid = true;
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $valid = false;
             $errorMsg = "You entered an invalid email!";
-            $this->userError($errorMsg);
+            $this->popUpMsg($errorMsg);
+        }
+        else if($this->SqlHandler->getUserByEmail($email) == false){
+            $valid = false;
+            $errorMsg = "No account is registered to this email!s";
+            $this->popUpMsg($errorMsg);
+        }
+        
+        if($valid == true){
+            $code = SecureRandom::getToken(6);
+            $this->Mailer->sendPasswordResetCodeEmail($code, $email);
+            $this->passwordResetCode = $code;
+            $this->emailUsed = $email;
+            gotoView("/reset_code_enter");
         }
         else{
-            //generate new entry in forgotpassword table
-            //send email
-            if($this->SqlHandler->getUserByEmail($email) != false){
-                // user exits
-                $code = SecureRandom::getToken(6);
-                $this->Mailer->sendPasswordResetCodeEmail($code, $email);
-                $this->passwordResetCode = $code;
-                $this->emailUsed = $email;
-                $this->currentView = "ResetCodeView";
-            }
-            else{
-                $errorMsg = "No account is registered to this email!s";
-                $this->userError($errorMsg);
-            }
-            
-        }
+            gotoView("/forgot_password");
+        }              
     }
     
     private function resetCodeEntered($data){
         $enteredResetcode = $data["resetCode"];
         if($enteredResetcode == $this->passwordResetCode){
-            $this->currentView = "ResetPasswordView";           
+            $this->currentView = "reset_code_enter";
+            gotoView("/reset_password");
+            
         }
         else{
             $errorMsg = "Invalid Reset Code";
-            $this->userError($errorMsg);
+            $this->popUpMsg($errorMsg);
+            gotoView("/reset_code_enter");
         }
         
     }
@@ -361,20 +366,28 @@ class  Controller{
         $lowercase = preg_match('@[a-z]@', $password);
         $number    = preg_match('@[0-9]@', $password);
         
+        $valid = true;
+        
         if(!$uppercase || !$lowercase || !$number || strlen($password) < 6) {
             $errorMsg = "Password should be at least 6 characters in length and should include at least one upper case letter and one number!";
-            $this->userError($errorMsg);
+            $this->popUpMsg($errorMsg);
+            $valid = false;
         }
         else if($password != $confirmPassword){
             $errorMsg = "Passwords dont match!";
-            $this->userError($errorMsg);
+            $this->popUpMsg($errorMsg);
+            $valid = false;
         }
-        else{
+        if (  $valid == true){
             // update password - not gonna be loged in 
             $userID = $this->SqlHandler->getUserByEmail($email)->UserID;
             $hashedPassword= password_hash($password,PASSWORD_DEFAULT);
             $this->SqlHandler->updateUserPassword($userID, $hashedPassword);
             echo "PASSWORD RESET!!!!!";
+            gotoView("/Home");
+        }
+        else{
+            gotoView("/reset_password");
         }
         
     }
@@ -398,7 +411,7 @@ class  Controller{
             $valid = false;
             $usernameValid = false;
             $errorMsg = "Username must be atleast 5 at least 6 characters in length ";
-            $this->userError($errorMsg);
+            $this->popUpMsg($errorMsg);
         }                    
         
         $uppercase = preg_match('@[A-Z]@', $password);
@@ -408,34 +421,37 @@ class  Controller{
         if(!$uppercase || !$lowercase || !$number || strlen($password) < 6) {                  
             $valid = false;
             $errorMsg = "Password should be at least 6 characters in length and should include at least one upper case letter and one number!";
-            $this->userError($errorMsg);                  
+            $this->popUpMsg($errorMsg);                  
         }
         
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $valid = false;
             $emailValid = false;
             $errorMsg = "You entered an invalid email!";
-            $this->userError($errorMsg);  
+            $this->popUpMsg($errorMsg);  
         }
         if(!($password === $passwordConfirm)){
             $valid = false;
             $errorMsg = "Your passwords dont match!";
-            $this->userError($errorMsg); 
+            $this->popUpMsg($errorMsg); 
         }
         if(($usernameValid == true)&& (($this->SqlHandler->getUser($username) != false))){
             $valid = false;
             $errorMsg = "That username is already taken!";
-            $this->userError($errorMsg); 
+            $this->popUpMsg($errorMsg); 
         }
         if(($emailValid == true) && (($this->SqlHandler->getUserByEmail($email) != false))){
             $valid = false;
             $errorMsg = "That email is already linked to another account!";
-            $this->userError($errorMsg); 
+            $this->popUpMsg($errorMsg); 
         }
         if($valid == true){
             echo "VALID REG !";
             $hashedPassword= password_hash($password,PASSWORD_DEFAULT);
             $this->SqlHandler->insertUser($username, $email, $hashedPassword);
+            $msg = "Sucessfully registered!";
+            $this->popUpMsg($msg);
+            gotoView("/Login");
             // lead to home page
         }
         
@@ -449,7 +465,7 @@ class  Controller{
         
         if(strlen($requestDesc)>=1000) { // for english chars + numbers only
             $errorMsg = "description must be less than 1000 characters";
-            $this->userError($errorMsg);
+            $this->popUpMsg($errorMsg);
             gotoView("/Request_item");
         }
         else{
@@ -483,28 +499,28 @@ class  Controller{
             // valid item name, alphanumeric & longer than or equals 3 chars
             $valid = false;
             $errorMsg = "item name must be at least 3 characters in length and only use numbers and letters";
-            $this->userError($errorMsg);
+            $this->popUpMsg($errorMsg);
         }
         else if(!(preg_match('/^[a-zA-Z ]{3,}$/', $colour))) { // for english chars + numbers only
             // valid item colour, alphanumeric & longer than or equals 3 chars
             $valid = false;
             $errorMsg = "item colour must be at least 3 characters in length and only use letters";
-            $this->userError($errorMsg);
+            $this->popUpMsg($errorMsg);
         }
         else if(!(preg_match('/^[a-zA-Z0-9 ]{3,}$/', $location))) { // for english chars + numbers only
             $valid = false;
             $errorMsg = "item location must be at least 5 characters in length and only use numbers and letters";
-            $this->userError($errorMsg);
+            $this->popUpMsg($errorMsg);
         }
         else if(strlen($description)>=1000) { // for english chars + numbers only
             $valid = false;
             $errorMsg = "description must be less than 1000 characters";
-            $this->userError($errorMsg);
+            $this->popUpMsg($errorMsg);
         }
         else if(checkdate($month,$day,$year) == false) { // for english chars + numbers only
             $valid = false;
             $errorMsg = "invalid date entered! $month,$day,$year";
-            $this->userError($errorMsg);
+            $this->popUpMsg($errorMsg);
         }
         if($valid == true){
             $this ->lastAddedItemID =  $this->SqlHandler->addItem(array("name"=>$name,"colour"=>$colour,
@@ -532,7 +548,7 @@ class  Controller{
         if($imgCount>10){
             $valid = false;
             $errorMsg = "maximum of 10 image allowed";
-            $this->userError($errorMsg);
+            $this->popUpMsg($errorMsg);
         }
         for($i=0; $i<$imgCount && $valid == true; $i++){
             $name = $allImgs["name"][$i];
@@ -541,7 +557,7 @@ class  Controller{
             if(in_array($type, $imgTypes) == false){
                 $valid = false;
                 $errorMsg = "a file was not of type png or jpeg";
-                $this->userError($errorMsg);
+                $this->popUpMsg($errorMsg);
             }
             
             echo "<br>type = $type<br>";
@@ -551,15 +567,18 @@ class  Controller{
             mkdir($path."\\".$itemID);
             for($i=0; $i<$imgCount; $i++){
                 $errorMsg = "immage count = $imgCount";
-                $this->userError($errorMsg);
+                $this->popUpMsg($errorMsg);
                 $temp_name = $allImgs["tmp_name"][$i];
                 $type = pathinfo($name)["extension"];
                 $destination = $path."\\".$itemID."\\".$i.".".$type;
                 move_uploaded_file($temp_name, $destination);
                 
             }
-            gotoView("/Home");
             $this->currentView = "AddItemPhotosView";
+            $msg = "item sucessfully added!";
+            $this->popUpMsg($msg);
+            gotoView("/Home");
+        
         }
         else{
             
@@ -583,23 +602,7 @@ class  Controller{
         gotoView("/add_item_details");
     }
     
-    private function addFoundItemClicked($data){       
-        $this->currentView = "SelectItemCategoryView";
-    } 
-    
-//     private function requestItemClicked($data){
-//         echo "yee - "+ print_r($data);
-//        // $username = $data['username'];
-//         $itemID  = $data['itemID'];
-//        // $username ="admin"; 
-//         $queryResult = $this->SqlHandler->getItem($itemID);
-//         $item = $queryResult["item"];
-//         $this->dataPassedToView['item'] = $item;
-//         $this->currentView = "RequestItemView";
-//         gotoView("/Request_item");
-//         //$this->c
-//     }
-    
+
     
     private function itemRowClicked($itemID){
         echo "data passed = ".print_r($itemID)."  x= ".$itemID;
@@ -617,55 +620,17 @@ class  Controller{
     
 
     
-    private function loginButtonClicked(){
-        echo"login called called";
-        $this -> currentView = "LoginView"; 
-    }
     
-    
-    private function registerButtonClicked(){
-        echo"reg called";
-        $this -> currentView = "RegisterView";       
-    }
-    
-    private function guestButtonClicked(){
-        echo"guest called";
-        $this -> currentView = "ItemsTableView";    
-    }
-    
-    
-    private function tableViewLoginClicked(){
-        $this -> currentView = "IntroScreenView";  
-    }
-    
+  
     private function logoutClicked(){
         unset($this->loggedInUsername);
         $this -> currentView = "IntroScreenView";  
     }
     
     
-    private function backButtonClicked(){
-        echo"back called";
-        $v1 = array("ItemsTableView","RegisterView","LoginView");
-        $v2 = array("ItemDetailsView","SelectItemCategoryView","RequestItemView");
-        if(in_array($this->currentView,$v1)){
-            $this -> currentView = "IntroScreenView";
-        }       
-        if(in_array($this->currentView,$v2)){
-            $this -> currentView = "ItemsTableView";
-        }
-        else{
-            $this -> currentView = "IntroScreenView";
-        }
-       
-    }
     
     
-    
-    
-    
-    
-    private function userError($error){
+    private function popUpMsg($error){
         $msg = "<br>* $error <br>";
         if(isset($this->dataPassedToView["error"])){
             $this->dataPassedToView["error"] = $this->dataPassedToView["error"] . $msg;

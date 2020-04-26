@@ -15,7 +15,7 @@ Class ForgotPassword extends View{
                 <h1>FORGOT PASSWORD VIEW!</h1>
             
                 <br>
-                <form action = "./index.php" method = "POST">
+                <form action = "/UserInteraction" method = "POST">
                   <input type="text" name="email" placeholder =email required><br>
                   <input type="hidden" name = "emailSubmitForPasswordReset" value ="">
                   <input type="submit" value="Submit">
@@ -25,12 +25,6 @@ Class ForgotPassword extends View{
             
             
             
-            
-					<br>
-				<form action = "./index.php" method = "POST">
-					<input type=hidden name = "backButtonClicked" value ="">
-					<button type = "submit">back</button>
-				<form>
 				<br>
             
             

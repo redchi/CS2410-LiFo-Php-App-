@@ -15,7 +15,7 @@ Class ResetPasswordView extends View{
                 <h1>Reset password VIEW!</h1>
             
                 <br>
-                <form action = "./index.php" method = "POST">
+                <form action = "/UserInteraction" method = "POST">
                   <input type="password" name="password" placeholder = "password"><br>
                   <input type="password" name="password2" placeholder ="Confirm password"><br><br>
                   <input type="hidden" name = "newPasswordEntered" value ="">
@@ -24,14 +24,7 @@ Class ResetPasswordView extends View{
                 <br>
             
             
-            
-            
-            
-					<br>
-				<form action = "./index.php" method = "POST">
-					<input type=hidden name = "backButtonClicked" value ="">
-					<button type = "submit">back</button>
-				<form>
+
 				<br>
             
             

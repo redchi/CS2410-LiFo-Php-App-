@@ -12,10 +12,10 @@ Class ResetCodeView extends View{
                 <html>
                 <body>
             
-                <h1>LOGIN VIEW!</h1>
+                <h1>reset code enter VIEW!</h1>
             
                 <br>
-                <form action = "./index.php" method = "POST">
+                <form action = "/UserInteraction" method = "POST">
                   <input type="text" name="resetCode" placeholder = "Reset Code"><br>
                   <input type="hidden" name = "resetCodeEntered" value ="">
                   <input type="submit" value="Submit">
@@ -25,12 +25,6 @@ Class ResetCodeView extends View{
             
             
             
-            
-					<br>
-				<form action = "./index.php" method = "POST">
-					<input type=hidden name = "backButtonClicked" value ="">
-					<button type = "submit">back</button>
-				<form>
 				<br>
             
             
