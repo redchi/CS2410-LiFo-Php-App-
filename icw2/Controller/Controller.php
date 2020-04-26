@@ -361,7 +361,7 @@ class  Controller{
             // valid username, alphanumeric & longer than or equals 5 chars
             $valid = false;
             $usernameValid = false;
-            $errorMsg = "Username must be atleast 5 at least 6 characters in length ";
+            $errorMsg = "Username must be at least 5 characters in length ";
             $this->popUpMsg($errorMsg);
         }                    
         
