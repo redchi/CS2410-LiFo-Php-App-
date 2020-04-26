@@ -6,7 +6,7 @@ echo"<h3> post =  ".print_r($_POST)."</h3><br>";
 //echo "<br> file = ".$_FILES['file']["name"]."<br>";
 session_start();
 
-define('URL', 'http://localhost/icw2');
+define('URL', 'http://localhost');
 
 
 echo"<h3> requestedView =  ".print_r($requests)."</h3><br>";
@@ -29,6 +29,7 @@ if(empty($requestedView)){
     echo "not set";
 }
 
+ 
     $requestedView = $_GET["requestedView"];
     $requests = explode("/", $requestedView);
     $firstReq = strtolower($requests[0]);
@@ -36,6 +37,18 @@ if(empty($requestedView)){
     $count = count($requests);
     $signedIn = $Controller->isUserSignedIn();
     $isadmin = $Controller->isUserAdmin();
+    
+    echo "<br><h2>";
+    echo $Controller->loggedInUsername;
+    
+    if($signedIn == true){
+        echo " signed in";
+    }
+    else{
+        echo "not signed in";
+    }
+        
+        echo "<br></h2>";
     
     echo "<h1> 1 $signedIn</h1>";
     if($firstReq == "userinteraction" ){
@@ -93,7 +106,7 @@ if(empty($requestedView)){
     elseif($firstReq == "request_item" && $count == 2){
         if($signedIn == true){
             $dataPassed = array("itemID" =>$secondReq);
-            $Controller->displayView("ItemsTableView",$dataPassed);
+            $Controller->displayView("RequestItemView",$dataPassed);
         }
         else{
             gotoView("/All_items");
@@ -109,7 +122,7 @@ if(empty($requestedView)){
             gotoView("/Home");
         }
     }
-    elseif($firstReq == "add_tem_details" && $count == 1){
+    elseif($firstReq == "add_item_details" && $count == 1){
         if($signedIn == true){
             $Controller->displayView("AddItemDetailsView");
         }
@@ -140,7 +153,7 @@ if(empty($requestedView)){
     elseif($firstReq == "view_item_request" && $count == 2){
         if($isadmin == true){
             $dataPassed = array("requestID" =>$secondReq);
-            $Controller->displayView("RequestDetailsView");
+            $Controller->displayView("RequestDetailsView",$dataPassed);
         }
         else{
             gotoView("/Home");
@@ -153,7 +166,10 @@ if(empty($requestedView)){
         
     }
     else{
+        echo "PAGE NOT FOUND!";
+        echo"got = $firstReq";
         // page not found
+        //http://localhost/UploadedImages/107/0.png
         //$Controller->displayView("pagenotfound");
         
     }
@@ -185,6 +201,8 @@ function processUserinteractionData($Controller){
 }
 
 function gotoView($view){
+    $controller = $GLOBALS["Controller"];
+    $_SESSION['Controller'] = serialize($controller);
     header('Location: '.URL.$view);
     exit;
 }

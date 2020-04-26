@@ -34,6 +34,7 @@ Class ItemsTableView extends View{
             
            
             $htmlTabeRowTag= "";
+            $loggedin = true;
             if($loggedin == true){
                 $htmlTabeRowTag = '<tr onclick="document.getElementById(\''."item-id-$ID".'\').submit();">';
             }
@@ -43,8 +44,8 @@ Class ItemsTableView extends View{
             
             
             $htmlRow =
-            "<tr>".'<form id="item-id-'.$ID.'" method="POST" action="your-php-file-url">
-             <input type="hidden" name="itemRowClicked" value='.$ID.'>
+            "<tr>".'<form id="item-id-'.$ID.'" action="'.URL."/view_item/".$ID.'">
+          
              </form>'
                  .$htmlTabeRowTag."
                 <td>$name </td>
@@ -86,32 +87,13 @@ Class ItemsTableView extends View{
             	</tbody>
             </table>
 
-            <br>
-            <form action = "./index.php" method = "POST">
-            	<input type=hidden name = "nextItemPageClicked" value ='.$countIndex.'>
-            	<button type = "submit">next item page</button>
-            </form>
 
-            <br>
-            <form action = "./index.php" method = "POST">
-            	<input type=hidden name = "previousItemPageClicked" value ='.$countIndex.'>
-            	<button type = "submit">prev item page</button>
-            </form>
-
-             <br>
-            <form action = "./index.php" method = "POST">
-            	<input type=hidden name = "itemRowClicked" value ="2">
-            	<button type = "submit">test item details</button>
-            </form>
-
-            <form action = "./index.php" method = "POST">
-            	<input type=hidden name = "addFoundItemClicked" value ="">
+            <form action = "'.URL.'/add_item_category">
             	<button type = "submit">Add an item</button>
             </form>
 
               <br>
-            <form action = "./index.php" method = "POST">
-            	<input type=hidden name = "viewAllRequestsClicked" value ="">
+            <form action =  "'.URL.'/all_item_requests">
             	<button type = "submit">admin view all requests</button>
             </form>
 

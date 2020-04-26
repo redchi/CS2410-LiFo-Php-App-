@@ -26,19 +26,10 @@ Class AddItemPhotosView extends View{
 			    <br>
                 </h3>
             
-  
-
-                 <form method ="POST" enctype="multipart/form-data">
-                    <input type = "file" name="uploadedImage">
-                    <input type="hidden" name = "Category" value ="'.$category.'">
-                    <input type="hidden" name = "itemPhotosUploadRequest" value ="uploadedImage">
-                    <button type = "sumbit"> upload</button>
-                  </form>
-                    <br>
 
 
 
-                <form method ="POST" enctype="multipart/form-data">
+                <form action="/UserInteraction" method ="POST" enctype="multipart/form-data">
                     <input type = "file" name="images[]" multiple
                     <input type="hidden" name = "Category" value ="'.$category.'">
                     <input type="hidden" name="itemPhotosUploadRequest" value="images">

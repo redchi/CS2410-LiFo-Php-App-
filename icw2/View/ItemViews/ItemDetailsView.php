@@ -41,17 +41,10 @@ Class ItemDetailsView extends View{
 
                 </h3>
 
-                <form action = "./index.php" method = "POST">
-                    <input type=hidden name = "itemID" value ="'.$ID.'">
-                	<input type=hidden name = "requestItemClicked" value ="">
+                <form action = "/Request_item/'.$ID.'">
                 	<button type = "submit">Request this item</button>
                 </form>
-                <br>
-                <form action = "./index.php" method = "POST">
-                	<input type=hidden name = "backButtonClicked" value ="">
-                	<button type = "submit">back</button>
-                </form>
-            
+
             
                 </body>
                 </html>
@@ -66,8 +59,12 @@ Class ItemDetailsView extends View{
     
     
     private function drawImageSlideShow($itemID){
-        $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages\\".$itemID;
-        $folder = scandir($path,1);
+        $dir = ".\UploadedImages\\".$itemID;
+     //   $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages\\".$itemID;
+        $path ="http://localhost/UploadedImages";
+        
+        
+        $folder = scandir($dir,1);
         $count = count($folder) - 2;
 
         $allPicsBlockHtml = "";
@@ -75,7 +72,7 @@ Class ItemDetailsView extends View{
         
         for($i=0; $i<$count; $i++){
             $pic = $folder[$i];
-            $picPath = $path."\\".$pic;   
+            $picPath = $path."/"."$itemID/".$pic; 
             $picHtml = 
           '<div class="mySlides fade">
             <div class="numbertext">'.($i+1).' / '.($count+1).'</div>

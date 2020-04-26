@@ -26,7 +26,7 @@ Class AddItemDetailsView extends View{
 			    <br>             
                 </h3>
 
-            <form method = "POST">
+            <form action ="/UserInteraction" method = "POST">
         
         	<input type="text" placeholder="item name" name="name" required><br>
         	 <input list="colours" name="colour" placeholder="colour" required><br>
@@ -66,11 +66,6 @@ Class AddItemDetailsView extends View{
         	  
               </form> 
 
-              <form action = "./index.php" method = "POST">
-
-                	<input type=hidden name = "backButtonClicked" value ="">
-                	<button type = "submit">back</button>
-                </form>
                     
                     
                 </body>

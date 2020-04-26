@@ -183,10 +183,10 @@ class SqlHandler{
         return $result;
     }
     
-    public function getAllRequests($limit,$offset){
-        $sql = "SELECT * FROM requeststouseranditem LIMIT :limit OFFSET :offset;";
-        $namedParams = array("limit"=>$limit,"offset"=>$offset);
-        $resultObjs = $this->Model->queryDatabase($sql,$namedParams);  
+    public function getAllRequests(){
+        $sql = "SELECT * FROM requeststouseranditem;";
+    //    $namedParams = array("limit"=>$limit,"offset"=>$offset);
+        $resultObjs = $this->Model->queryDatabase($sql);  
        
         $outputArray = array();
         foreach($resultObjs as $obj){

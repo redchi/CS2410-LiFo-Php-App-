@@ -21,21 +21,14 @@ Class RequestItemView extends View{
                 <br>
             
 
-                 <form action = "./index.php" method = "POST">
+                 <form action = "/UserInteraction" method = "POST">
                   <input type="text" name="request" placeholder = "request description" requred><br>      
                 	    <input type=hidden name = "itemID" value ="'.$item->ItemID.'">
-                        <input type=hidden name = "requestClicked" value ="">
+                        <input type=hidden name = "itemRequested" value ="">
                 	<button type = "submit">submit</button>
                 </form>
             
 
-
-            
-                <form action = "./index.php" method = "POST">
-                	<input type=hidden name = "backButtonClicked" value ="">
-                	<button type = "submit">back</button>
-                </form>
-            
             
                 </body>
                 </html>

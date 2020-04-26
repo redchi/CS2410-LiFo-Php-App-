@@ -27,7 +27,7 @@ Class SelectItemCategoryView extends View{
                 </h3>
             
       
-                <form action = "./index.php" method="Post">
+                <form action = "/UserInteraction" method="POST">
                          <p>Category:</p>
                          <select name="Category">
                             <option value="Pet">Pet</option>
@@ -41,12 +41,6 @@ Class SelectItemCategoryView extends View{
 
 
 
-
-                <form action = "./index.php" method = "POST">
-                	<input type=hidden name = "backButtonClicked" value ="">
-                	<button type = "submit">back</button>
-                </form>
-            
             
                 </body>
                 </html>

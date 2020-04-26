@@ -12,7 +12,7 @@ class  Controller{
     
     
     private $SqlHandler;
-    private $loggedInUsername;
+    public $loggedInUsername;
     private $Mailer;  
     
     private $passwordResetCode;
@@ -44,7 +44,7 @@ class  Controller{
     
     
     public function isUserAdmin(){
-        return ($this->isUserSignedIn == true && $this->loggedInUsername =="admin");
+        return ($this->isUserSignedIn() == true && $this->loggedInUsername =="admin");
     }
     
     
@@ -54,7 +54,7 @@ class  Controller{
         
         if(is_callable(array('Controller', $method_name))){
             echo "##x1";
-            $this->$method_name();
+            $this->$method_name($viewParams);
         }
         else{
             echo "##x2";
@@ -124,7 +124,7 @@ class  Controller{
 //     }
     
     private function DisplayIntroScreenView(){
-        $this->views[IntroScreenView]->draw($this->dataPassedToView);
+        $this->views["IntroScreenView"]->draw($this->dataPassedToView);
     }
     
     private function DisplayItemsTableView(){
@@ -141,17 +141,71 @@ class  Controller{
     }
     
     private function DisplayAllRequestsView(){
-        $countIndex = 0;
-        if(isset($this->dataPassedToView['countIndex'])){
-            $countIndex = $this->dataPassedToView['countIndex'];
-        }
-        
-        echo "count index ## = ".$countIndex;
-        $allObjs = $this->SqlHandler->getAllRequests(5,$countIndex);
+
+     //   echo "count index ## = ".$countIndex;
+        $allObjs = $this->SqlHandler->getAllRequests();
         // do validation for query result ! 5 max
         $this -> dataPassedToView["queryResult"] = $allObjs;
+        $this->currentView =  "AllRequestsView";
         $this->views[$this->currentView]->draw($this->dataPassedToView);
     }
+    
+    private function DisplayItemDetailsView($params){
+        echo "x34 called";
+        $itemID = $params["itemID"];
+        
+        $queryResult = $this->SqlHandler->getItem($itemID);
+        $item = $queryResult["item"];
+        $foundByUser = $queryResult["user"];
+        // add validation !
+        
+        $this->dataPassedToView['item'] = $item;
+        $this->dataPassedToView['user'] = $foundByUser;
+        $this -> currentView = "ItemDetailsView";
+        $this->views[$this->currentView]->draw($this->dataPassedToView);
+    }
+    
+    private function DisplayRequestItemView($data){
+        echo "yee - ". print_r($data);
+        // $username = $data['username'];
+        $itemID  = $data['itemID'];
+        // $username ="admin";
+        $queryResult = $this->SqlHandler->getItem($itemID);
+        $item = $queryResult["item"];
+        $this->dataPassedToView['item'] = $item;
+        $this->currentView = "RequestItemView";
+        $this->views[$this->currentView]->draw($this->dataPassedToView);
+        
+    }
+    private function DisplayRequestDetailsView($data){
+        echo "YEEEEEEEEEEEEEEE";
+        $requestID  = $data['requestID'];
+        $this->currentView = "RequestDetailsView";
+        $resultObjs = $this->SqlHandler->getRequestAndRelatedObjs($requestID);
+        $this->dataPassedToView["request"] = $resultObjs;
+        $this->views[$this->currentView]->draw($this->dataPassedToView);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -166,7 +220,7 @@ class  Controller{
  
     
     private function approveRequest($RID){
-        
+        echo "X1 CALLED";
         $resultObjs = $this->SqlHandler->getRequestAndRelatedObjs($RID);
         $item = $resultObjs["item"];     
         $user = $resultObjs["user"];
@@ -193,34 +247,6 @@ class  Controller{
         
         $this->SqlHandler->deleteRequest($RID);
         
-    }
-    
-    private function nextPageOnRTableClicked($countIndex){
-        $itemCountIndex = (int)$countIndex;
-        echo "next item page called $itemCountIndex ";
-        
-        $maxCount = $this->SqlHandler->getAllRequestsCount();
-        $setIndex = $itemCountIndex;
-        
-        if($maxCount - ($itemCountIndex+5)>0){
-            $setIndex = $setIndex + 5;
-        }
-        
-        $this->dataPassedToView['countIndex'] = $setIndex;
-      //  $this->currentView = "ItemsTableView";
-        echo "<br>###current view = ".$this -> currentView."<br>";      
-    }
-    
-    private function prevPageOnRTableClicked($countIndex){
-        $itemCountIndex = (int)$countIndex;
-        echo "prev item page called $itemCountIndex ";
-        
-        // $maxCount = $this->SqlHandler->getAllItemsCount();
-        $setIndex = $itemCountIndex;
-        if($itemCountIndex - 5>=0){
-            $setIndex = $setIndex - 5;
-        }
-        $this->dataPassedToView['countIndex'] = $setIndex;
     }
     
     
@@ -277,7 +303,9 @@ class  Controller{
             $this->currentView = "ItemsTableView";
             gotoView("/Home");
         }        
-        
+        else{
+            gotoView("/login");
+        }
         echo "<br><h1>".$username."  ".$password."<br></h1>";       
     }
    
@@ -415,16 +443,23 @@ class  Controller{
     
     
     
-    private function requestClicked($data){
+    private function itemRequested($data){
         $requestDesc = $data["request"];
         $itemID = $data["itemID"];
-        $userID = $this->SqlHandler->getUser($this->loggedInUsername)->UserID;
-        $this->SqlHandler->insertRequest($requestDesc, $itemID, $userID);
-        echo "request processed yee yee!";        
+        
+        if(strlen($requestDesc)>=1000) { // for english chars + numbers only
+            $errorMsg = "description must be less than 1000 characters";
+            $this->userError($errorMsg);
+            gotoView("/Request_item");
+        }
+        else{
+            $userID = $this->SqlHandler->getUser($this->loggedInUsername)->UserID;
+            $this->SqlHandler->insertRequest($requestDesc, $itemID, $userID);
+            gotoView("/Home");
+        }
+        
+          
     }
-    
-    
-  
     
     
     private $lastAddedItemID;
@@ -436,13 +471,52 @@ class  Controller{
         $location = $data["location"];
         $date = $data["date"];
         $description = $data["description"];
-        // validate then add to data base
-        $this ->lastAddedItemID =  $this->SqlHandler->addItem(array("name"=>$name,"colour"=>$colour,
-            "location"=>$location,"date"=>$date,"category"=>$category,"desc"=>$description 
-        ));
+        $valid = true;
         
-        $this->currentView = "AddItemPhotosView";
-        // validation here!AddItemPhotosView
+        $dateEx = explode("-", $date);
+        $year = $dateEx[0];
+        $month = $dateEx[1];
+        $day = $dateEx[2];
+        
+        echo print_r($dateEx);
+        if(!(preg_match('/^[a-zA-Z0-9 .]{3,}$/', $name))) { // for english chars + numbers only
+            // valid item name, alphanumeric & longer than or equals 3 chars
+            $valid = false;
+            $errorMsg = "item name must be at least 3 characters in length and only use numbers and letters";
+            $this->userError($errorMsg);
+        }
+        else if(!(preg_match('/^[a-zA-Z ]{3,}$/', $colour))) { // for english chars + numbers only
+            // valid item colour, alphanumeric & longer than or equals 3 chars
+            $valid = false;
+            $errorMsg = "item colour must be at least 3 characters in length and only use letters";
+            $this->userError($errorMsg);
+        }
+        else if(!(preg_match('/^[a-zA-Z0-9 ]{3,}$/', $location))) { // for english chars + numbers only
+            $valid = false;
+            $errorMsg = "item location must be at least 5 characters in length and only use numbers and letters";
+            $this->userError($errorMsg);
+        }
+        else if(strlen($description)>=1000) { // for english chars + numbers only
+            $valid = false;
+            $errorMsg = "description must be less than 1000 characters";
+            $this->userError($errorMsg);
+        }
+        else if(checkdate($month,$day,$year) == false) { // for english chars + numbers only
+            $valid = false;
+            $errorMsg = "invalid date entered! $month,$day,$year";
+            $this->userError($errorMsg);
+        }
+        if($valid == true){
+            $this ->lastAddedItemID =  $this->SqlHandler->addItem(array("name"=>$name,"colour"=>$colour,
+                "location"=>$location,"date"=>$date,"category"=>$category,"desc"=>$description
+            ));
+            $this->currentView = "AddItemDetailsView";
+            gotoView("/add_item_photos");
+        }
+        else{
+            gotoView("/Add_item_details");
+        }
+        
     }
     
     private function itemPhotosUploadRequest($data){
@@ -476,33 +550,27 @@ class  Controller{
         if($valid == true){
             mkdir($path."\\".$itemID);
             for($i=0; $i<$imgCount; $i++){
+                $errorMsg = "immage count = $imgCount";
+                $this->userError($errorMsg);
                 $temp_name = $allImgs["tmp_name"][$i];
                 $type = pathinfo($name)["extension"];
                 $destination = $path."\\".$itemID."\\".$i.".".$type;
                 move_uploaded_file($temp_name, $destination);
+                
             }
-            
-            
-            $this->photosToBeuploaded = $allImgs;
-            $this->currentView = "AddItemDetailsView";
+            gotoView("/Home");
+            $this->currentView = "AddItemPhotosView";
         }
+        else{
+            
+            gotoView("/add_item_photos");
+        }
+        
+        
     }
     
     
-    private function uploadPhotos(){
-        echo "upload photos called ";
-        $allImgs = $this->photosToBeuploaded;
-        $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages";
-        $imgCount = count($allImgs["name"]);
-        for($i=0; $i<$imgCount; $i++){
-            $name = $allImgs["name"][$i];
-            echo "<br> name = ".$name;
-            $temp_name = $allImgs["tmp_name"][$i];
-            $destination = $path."\\".$name;
-            move_uploaded_file($temp_name, $destination);
-        }  
-  
-    }
+
     
     
     
@@ -512,23 +580,25 @@ class  Controller{
         $category = $data["Category"];
         $this ->dataPassedToView["Category"] = $category;
         $this->currentView = "AddItemDetailsView";
+        gotoView("/add_item_details");
     }
     
     private function addFoundItemClicked($data){       
         $this->currentView = "SelectItemCategoryView";
     } 
     
-    private function requestItemClicked($data){
-        echo "yee - "+ print_r($data);
-       // $username = $data['username'];
-        $itemID  = $data['itemID'];
-       // $username ="admin"; 
-        $queryResult = $this->SqlHandler->getItem($itemID);
-        $item = $queryResult["item"];
-        $this->dataPassedToView['item'] = $item;
-        $this->currentView = "RequestItemView";
-        //$this->c
-    }
+//     private function requestItemClicked($data){
+//         echo "yee - "+ print_r($data);
+//        // $username = $data['username'];
+//         $itemID  = $data['itemID'];
+//        // $username ="admin"; 
+//         $queryResult = $this->SqlHandler->getItem($itemID);
+//         $item = $queryResult["item"];
+//         $this->dataPassedToView['item'] = $item;
+//         $this->currentView = "RequestItemView";
+//         gotoView("/Request_item");
+//         //$this->c
+//     }
     
     
     private function itemRowClicked($itemID){
@@ -543,32 +613,7 @@ class  Controller{
       $this -> currentView = "ItemDetailsView";
     }
     
-    private function nextItemPageClicked($countIndex){
-        $itemCountIndex = (int)$countIndex;
-        echo "next item page called $itemCountIndex ";
-        
-        $maxCount = $this->SqlHandler->getAllItemsCount();
-        $setIndex = $itemCountIndex;
-        if($maxCount - ($itemCountIndex+5)>0){
-            $setIndex = $setIndex + 5;
-        }
-        $this->dataPassedToView['countIndex'] = $setIndex;
-        $this->currentView = "ItemsTableView";
-        echo "<br>###current view = ".$this -> currentView."<br>";
-    }
-    
-    private function previousItemPageClicked($countIndex){
-        $itemCountIndex = (int)$countIndex;
-        echo "prev item page called $itemCountIndex ";
-        
-       // $maxCount = $this->SqlHandler->getAllItemsCount();
-        $setIndex = $itemCountIndex;
-        if($itemCountIndex - 5>=0){
-            $setIndex = $setIndex - 5;
-        }
-        $this->dataPassedToView['countIndex'] = $setIndex;
-    }
-    
+  
     
 
     

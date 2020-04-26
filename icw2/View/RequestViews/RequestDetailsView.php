@@ -32,19 +32,14 @@ Class RequestDetailsView extends View{
                     </h3>
                 
                 <br>
-				<form action = "./index.php" method = "POST">
+				<form action = "/UserInteraction" method = "POST">
 					<input type=hidden name = "approveRequest" value ="'.$requestID.'">
 					<button type = "submit">Approve</button>
 				</form>
                 <br>
-				<form action = "./index.php" method = "POST">
+				<form action = "/UserInteraction" method = "POST">
 					<input type=hidden name = "guestButtonClicked" value ="">
 					<button type = "submit">Deny</button>
-				</form>
-				<br>
-				<form action = "./index.php" method = "POST">
-					<input type=hidden name = "guestButtonClicked" value ="">
-					<button type = "submit">Back</button>
 				</form>
 				<br>
             

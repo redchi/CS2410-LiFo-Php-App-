@@ -16,7 +16,7 @@ Class RegisterView extends View{
                 <h1>REGISTER VIEW!</h1>
 					<br>
 				<br>
-                <form action = "./index.php" method = "POST">
+                <form action = "'.URL."/UserInteraction".'" method = "POST">
                   <input type="text" name="username" placeholder ="username" required ><br><br>
                   <input type="text" name="email" placeholder ="email" required><br><br>
                   <input type="password"  name="password" placeholder ="password" required><br><br>
@@ -26,13 +26,6 @@ Class RegisterView extends View{
                 </form> 
                 <br>
 
-
-
-
-                    <form action = "./index.php" method = "POST">
-					<input type=hidden name = "backButtonClicked" value ="">
-					<button type = "submit">back</button>
-				<form>
 				<br>
             
             

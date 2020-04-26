@@ -43,8 +43,8 @@ Class AllRequestsView extends View{
             
             
             $htmlRow =
-            "<tr>".'<form id="req-id-'.$requestID.'" method="POST" action="./index.php">
-             <input type="hidden" name="requestTableRowClicked" value='.$requestID.'>
+            "<tr>".'<form id="req-id-'.$requestID.'"  action="/view_item_request/'.$requestID.'">
+           
              </form>'
                  .'<tr onclick="document.getElementById(\''."req-id-$requestID".'\').submit();">'."
                 <td>$itemName </td>

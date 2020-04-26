@@ -20,7 +20,10 @@ Class IntroScreenView extends View{
 				<form action = "'.URL.'/Register">				
 					<button type = "submit">Register</button>
 				</form>
-
+                <br>
+	               <form action = "'.URL.'/Home">				
+					<button type = "submit">Continue as guest</button>
+				</form>
 
                 </body>
                 </html>
