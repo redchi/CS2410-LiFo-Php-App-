@@ -14,7 +14,7 @@ include_once 'View/LoginViews/ResetPasswordView.php';
 include_once 'View/RequestViews/AllRequestsView.php';
 include_once 'View/RequestViews/RequestDetailsView.php';
 include_once 'View/HomeView.php';
-
+include_once 'View/ErrorView.php';
 Class View{
     
     public function __construct(){

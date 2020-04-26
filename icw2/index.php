@@ -18,18 +18,13 @@ if(!isset($_SESSION['Controller'])){
     //$controllerFound = false;
 }
 else{
+    //$Controller = new Controller();
+    
     $Controller = unserialize($_SESSION['Controller']);
     //$controllerFound = true;
 }
 
 
-
-
-if(empty($requestedView)){
-    echo "not set";
-}
-
- 
     $requestedView = $_GET["requestedView"];
     $requests = explode("/", $requestedView);
     $firstReq = strtolower($requests[0]);
@@ -150,7 +145,7 @@ if(empty($requestedView)){
     
     
     
-    elseif($firstReq == "view_item_request" && $count == 2){
+    elseif($firstReq == "" && $count == 2){
         if($isadmin == true){
             $dataPassed = array("requestID" =>$secondReq);
             $Controller->displayView("RequestDetailsView",$dataPassed);
@@ -159,15 +154,14 @@ if(empty($requestedView)){
             gotoView("/Home");
         }
     }
-    elseif($firstReq == "home" && $count == 1){
-        
+    elseif($firstReq == "error" && $count == 1){
+        $Controller->displayView("ErrorView");
     }
-    elseif($firstReq == "home" && $count == 1){
-        
-    }
+
     else{
         echo "PAGE NOT FOUND!";
         echo"got = $firstReq";
+        gotoView("/Error");
         // page not found
         //http://localhost/UploadedImages/107/0.png
         //$Controller->displayView("pagenotfound");
