@@ -90,10 +90,13 @@ Class SelectItemCategoryView extends View{
         
         <div class="media-container-row pt-5 ">
             <div class="card p-3 col-12 col-md-6 col-lg-4">
+                    <form action = "/UserInteraction" method="POST" id = "pet">
+                        <input type=hidden name = "itemCategorySelected" value ="pet">
+                    </form>
                 <div class="card-wrapper ">
                     <div class="card-img">
                         <div class="mbr-overlay"></div>
-                        <div class="mbr-section-btn text-center"><a href="https://mobirise.co" class="btn btn-secondary display-4">Select</a></div>
+                        <div class="mbr-section-btn text-center"><a onclick="document.getElementById(\'pet\').submit();" class="btn btn-secondary display-4">Select</a></div>
                         <img src="'.URL.'/View/assets/images/mbr-676x452.jpeg" alt="Mobirise" title="">
                     </div>
                     <div class="card-box">
@@ -104,10 +107,13 @@ Class SelectItemCategoryView extends View{
                 </div>
             </div>
             <div class="card p-3 col-12 col-md-6 col-lg-4">
+                    <form action = "/UserInteraction" method="POST" id = "phone">
+                        <input type=hidden name = "itemCategorySelected" value ="phone">
+                    </form>
                 <div class="card-wrapper">
                     <div class="card-img">
                         <div class="mbr-overlay"></div>
-                        <div class="mbr-section-btn text-center"><a href="https://mobirise.co" class="btn btn-secondary display-4">Select</a></div>
+                        <div class="mbr-section-btn text-center"><a onclick="document.getElementById(\'phone\').submit();" class="btn btn-secondary display-4">Select</a></div>
                         <img src="'.URL.'/View/assets/images/mbr-676x451.jpeg" alt="Mobirise" title="">
                     </div>
                     <div class="card-box">
@@ -119,18 +125,18 @@ Class SelectItemCategoryView extends View{
             </div>
 
             <div class="card p-3 col-12 col-md-6 col-lg-4">
-			    <form action = "/UserInteraction" method="POST" id = "pet">
-                        <input type=hidden name = "itemCategorySelected" value ="">
+			    <form action = "/UserInteraction" method="POST" id = "jewellery">
+                        <input type=hidden name = "itemCategorySelected" value ="jewellery">
                     </form>
                 <div class="card-wrapper">
                     <div class="card-img">
                         <div class="mbr-overlay"></div>
-                        <div class="mbr-section-btn text-center"><a  onclick="document.getElementById(\'pet\').submit();" class="btn btn-secondary display-4">Select</a></div>
+                        <div class="mbr-section-btn text-center"><a  onclick="document.getElementById(\'jewellery\').submit();" class="btn btn-secondary display-4">Select</a></div>
                         <img src="'.URL.'/View/assets/images/mbr-676x444.jpeg" alt="Mobirise" title="">
                     </div>
                     <div class="card-box">
                         <h4 class="card-title mbr-fonts-style display-5">
-                            Jewlery</h4>
+                            jewellery</h4>
                         
                     </div>
                 </div>

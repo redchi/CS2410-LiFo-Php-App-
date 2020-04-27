@@ -439,11 +439,23 @@ class  Controller{
     private $lastAddedItemID;
     
     private function addItem($data){
+        
         $category = $data["Category"];
+        // check if category is correct
+        
+        $cats = array("pet","phone","jewellery");
+        if(in_array($category, $cats) == false){
+            $valid = false;
+            $errorMsg = "Error trying to add a non existant category?
+                          Please select a valid category";
+            $this->popUpMsg($errorMsg);
+            gotoView("/add_item_category");
+        }
+        
         $name = $data["name"];
         $colour = $data["colour"];
         $location = $data["location"];
-        $date = $data["date"];
+        $date = $data["date_found"];
         $description = $data["description"];
         $valid = true;
         
@@ -452,7 +464,6 @@ class  Controller{
         $month = $dateEx[1];
         $day = $dateEx[2];
         
-        echo print_r($dateEx);
         if(!(preg_match('/^[a-zA-Z0-9 .]{3,}$/', $name))) { // for english chars + numbers only
             // valid item name, alphanumeric & longer than or equals 3 chars
             $valid = false;
@@ -485,16 +496,18 @@ class  Controller{
                 "location"=>$location,"date"=>$date,"category"=>$category,"desc"=>$description
             ));
             $this->currentView = "AddItemDetailsView";
+            $msg = "item sucessfully added!";
+            $this->popUpMsg($msg);
             gotoView("/add_item_photos");
         }
         else{
             gotoView("/Add_item_details");
-        }
+        }       
         
     }
     
     private function itemPhotosUploadRequest($data){
-        echo $data;
+        echo print_r($data);
         // SRROUND WITH TRY CATCH
         $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages";
         $itemID = $this->lastAddedItemID;;
@@ -503,6 +516,12 @@ class  Controller{
         $valid = true;
         $imgTypes = array("jpeg","jpg","png");
         // validation in this loop
+        echo "v1 got ";
+        echo print_r($data);
+        echo "files = ";
+        echo print_r($allImgs);
+        
+     
         if($imgCount>10){
             $valid = false;
             $errorMsg = "maximum of 10 image allowed";
@@ -533,8 +552,7 @@ class  Controller{
                 
             }
             $this->currentView = "AddItemPhotosView";
-            $msg = "item sucessfully added!";
-            $this->popUpMsg($msg);
+
             gotoView("/Home");
         
         }
@@ -546,7 +564,11 @@ class  Controller{
     }
     
     private function itemCategorySelected($data){
-        $category = $data["Category"];
+     
+        $category = $data;
+        $msg = "got cat = $category";
+        $this->popUpMsg($msg);
+        //echo "<br><h1>got cat =$category </h1><br>";
         $this ->dataPassedToView["Category"] = $category;
         $this->currentView = "AddItemDetailsView";
         gotoView("/add_item_details");
