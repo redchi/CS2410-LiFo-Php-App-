@@ -50,6 +50,9 @@ else{
         echo "USER INTERACTION !!";
         processUserinteractionData($Controller);
     }
+    elseif($firstReq == "logout"){
+        $Controller->logout();
+    }
     elseif(empty($requestedView)){
         if($signedIn == true){
             gotoView("/Home");
@@ -145,7 +148,7 @@ else{
     
     
     
-    elseif($firstReq == "" && $count == 2){
+    elseif($firstReq == "view_item_request" && $count == 2){
         if($isadmin == true){
             $dataPassed = array("requestID" =>$secondReq);
             $Controller->displayView("RequestDetailsView",$dataPassed);

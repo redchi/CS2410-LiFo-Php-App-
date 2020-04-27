@@ -53,6 +53,8 @@ class  Controller{
        
         try {
             // call a success/error/progress handler
+            $this->dataPassedToView["userLoggedIn"] = $this->isUserSignedIn();
+            $this->dataPassedToView["adminLoggedIn"] = $this->isUserAdmin();
             $method_name = "Display".$viewName;
             $this->dataPassedToView['loggedInUsername'] = $this->loggedInUsername;
             if(is_callable(array('Controller', $method_name))){
@@ -90,6 +92,11 @@ class  Controller{
         }
         $this->saveState();  
        
+    }
+    
+    public function logout(){
+        unset($this->loggedInUsername);
+        gotoView("/Home");
     }
     
     private function saveState(){
@@ -565,10 +572,7 @@ class  Controller{
     
     
   
-    private function logoutClicked(){
-        unset($this->loggedInUsername);
-        $this -> currentView = "IntroScreenView";  
-    }
+    
     
     
     
