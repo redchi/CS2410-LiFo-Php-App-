@@ -412,6 +412,9 @@ class  Controller{
             gotoView("/Login");
             // lead to home page
         }
+        else{
+            gotoView("/Register");
+        }
         
     }
     
@@ -492,9 +495,10 @@ class  Controller{
             $this->popUpMsg($errorMsg);
         }
         if($valid == true){
+            $userID = $this->SqlHandler->getUser($this->loggedInUsername)->UserID;
             $this ->lastAddedItemID =  $this->SqlHandler->addItem(array("name"=>$name,"colour"=>$colour,
                 "location"=>$location,"date"=>$date,"category"=>$category,"desc"=>$description
-            ));
+            ),$userID);
             $this->currentView = "AddItemDetailsView";
             $msg = "item sucessfully added!";
             $this->popUpMsg($msg);

@@ -18,62 +18,6 @@ Class AddItemDetailsView extends View{
         
         
         $html = '
-                <!DOCTYPE html>
-                <html>
-                <body>
-            
-                <h1> ADD Item view!</h1>
-			    <br>             
-                </h3>
-
-            <form action ="/UserInteraction" method = "POST">
-        
-        	<input type="text" placeholder="item name" name="name" required><br>
-        	 <input list="colours" name="colour" placeholder="colour" required><br>
-        					<datalist id="colours">
-        							 <option value="Red">
-        							<option value="Orange">
-        							<option value="Yellow">
-        							<option value="Green">
-        							<option value="Blue">
-        							<option value="Purple">
-        							<option value="Brown">
-        							<option value="Magenta">
-        							<option value="Tan">
-        							<option value="Cyan">
-        							<option value="Olive">
-        							<option value="Maroon">
-        							<option value="Navy">
-        							<option value="Aquamarine">
-        							<option value="Turquoise">
-        							<option value="Silver">
-        							<option value="Lime">
-        							<option value="Teal">
-        							<option value="Indigo">
-        							<option value="Violet">
-        							<option value="Pink">
-        							<option value="Black">
-        							<option value="White">
-        							<option value="Gray">
-        					</datalist>
-        	   <input type="text" placeholder="Location Found" name="location" required><br>
-        	   <input type="date"  name="date" required><br>
-        	  <input type="text" placeholder=" Item Description" name="description" required><br>
-        	  <br>
-              <input type="hidden" name = "Category" value ="'.$category.'">
-        	  <input type="hidden" name = "addItem" value ="">
-        	  <input type="submit" value="Submit">
-        	  
-              </form> 
-
-                    
-                    
-                </body>
-                </html>
-                    
-        ';
-        
-        $html = '
 <!DOCTYPE html>
 <html  >
 <head>
@@ -103,45 +47,7 @@ Class AddItemDetailsView extends View{
   
 </head>
 <body>
-  <section class="menu cid-rXj05hWI7h" once="menu" id="menu1-1p">
-
-    
-
-    <nav class="navbar navbar-expand beta-menu navbar-dropdown align-items-center navbar-fixed-top navbar-toggleable-sm">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </button>
-        <div class="menu-logo">
-            <div class="navbar-brand">
-                <span class="navbar-logo">
-                    <a href="https://mobirise.co">
-                         <img src="'.URL.'/View/assets/images/logo1-122x122.png" alt="Mobirise" title="" style="height: 3.8rem;">
-                    </a>
-                </span>
-                <span class="navbar-caption-wrap"><a class="navbar-caption text-white display-5" href="https://mobirise.co">Find The Lost</a></span>
-            </div>
-        </div>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true"><li class="nav-item">
-                    <a class="nav-link link text-white display-4" href="https://mobirise.co">
-                        <span class="mbri-home mbr-iconfont mbr-iconfont-btn"></span>Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link link text-white display-4" href="https://mobirise.co"><span class="mbri-key mbr-iconfont mbr-iconfont-btn"></span>
-                        Admin View</a>
-                </li><li class="nav-item"><a class="nav-link link text-white display-4" href="https://mobirise.co"><span class="mbri-star mbr-iconfont mbr-iconfont-btn"></span>
-                        Add item</a></li><li class="nav-item"><a class="nav-link link text-white display-4" href="https://mobirise.co"><span class="mbri-search mbr-iconfont mbr-iconfont-btn"></span>
-                        View Items</a></li><li class="nav-item"><a class="nav-link link text-white display-4" href="https://mobirise.co"><span class="mbri-user mbr-iconfont mbr-iconfont-btn"></span>
-                        Login</a></li></ul>
-            
-        </div>
-    </nav>
-</section>
+ '.parent::DisplayNavBar().'
 
 <section class="engine"><a href="https://mobirise.info/f">easy web builder</a></section><section class="header15 cid-rX5TMzCGZt mbr-fullscreen" id="header15-9">
 

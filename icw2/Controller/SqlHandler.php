@@ -84,7 +84,6 @@ class SqlHandler{
         $namedParams = array("itemID"=>$itemID);
         $resultObjs = $this->Model->queryDatabase($sql,$namedParams);
         $itemObj = $resultObjs[0];
-        
         $sql = "SELECT users.Username,users.Email 
                 FROM users,items,userstofounditems
                 WHERE users.UserID = userstofounditems.UserID

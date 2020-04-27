@@ -208,7 +208,7 @@ Class ItemDetailsView extends View{
     <div class="container">
         <div class="media-container-row title">
             <div class="col-12 col-md-8">
-                <div class="mbr-section-btn align-center"><a class="btn btn-secondary display-4" href="https://mobirise.co">Request this item</a></div>
+                <div class="mbr-section-btn align-center"><a class="btn btn-secondary display-4" href="'.URL."/request_item/".$itemID.'">Request this item</a></div>
             </div>
         </div>
     </div>

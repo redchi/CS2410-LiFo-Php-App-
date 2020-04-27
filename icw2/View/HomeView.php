@@ -64,7 +64,7 @@ Class HomeView extends View{
     
     <div class="container align-center">
         <h2 class="mbr-section-title pb-3 mbr-fonts-style display-2">Home</h2>
-        <h3 class="mbr-section-subtitle pb-5 mbr-fonts-style display-5">Sometimes the things you\'ve lost can be found again in unexpected places</h3>
+        <h3 class="mbr-section-subtitle pb-5 mbr-fonts-style display-5">Made by A.Younas - 180050734 - Coursework CS2410</h3>
         <div class="media-container-column">
             <div class="row justify-content-center">
                 <div class="card p-4 col-12 col-md-6 col-lg-4">
