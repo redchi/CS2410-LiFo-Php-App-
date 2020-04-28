@@ -17,8 +17,8 @@ include_once 'View/HomeView.php';
 include_once 'View/ErrorView.php';
 Class View{
     
-    private $adminLogin;
-    private $userLogin;
+    protected $adminLogin;
+    protected $userLogin;
     
     public function __construct(){
         //nothing
@@ -31,9 +31,7 @@ Class View{
         if(isset($data["error"])){
             $this->DisplayError($data["error"]);
         }
-        else{
-            echo"#2";
-        }
+      
         // html goes here
     }
     

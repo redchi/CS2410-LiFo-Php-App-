@@ -16,35 +16,6 @@ Class ItemsTableView extends View{
         
         
         
-        $html = '
-        <!DOCTYPE html>
-        <html>
-            <body>
-            
-            <h1>Main item list VIEW!</h1><br>
-                       
-            <table  border = "5">
-            	<tbody>
-            	'.$tableHtml.'
-            	</tbody>
-            </table>
-
-
-            <form action = "'.URL.'/add_item_category">
-            	<button type = "submit">Add an item</button>
-            </form>
-
-              <br>
-            <form action =  "'.URL.'/all_item_requests">
-            	<button type = "submit">admin view all requests</button>
-            </form>
-
-            <br>
-            '.$backButtonHtml.'
-            <br>
-
-            </body>
-        </html>';
         
         
         
@@ -178,7 +149,7 @@ Class ItemsTableView extends View{
     
             
             $htmlTabeRowTag= "";
-            $loggedin = true;
+            $loggedin = $this->userLogin;
             if($loggedin == true){
                 $htmlTabeRowTag = '<tr style = "cursor: pointer;" onclick="document.getElementById(\''."item-id-$ID".'\').submit();">';
             }

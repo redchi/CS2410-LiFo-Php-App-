@@ -21,7 +21,7 @@ class  Controller{
     //private $isUserAdmin;
     
     public function __construct(){
-        echo "**NEW CONTROLLER MADE!**";
+     //   echo "**NEW CONTROLLER MADE!**";
         $viewNames = array("IntroScreenView","ItemsTableView"
             ,"RegisterView","LoginView","ItemDetailsView","AddItemDetailsView"
             ,"RequestItemView","AddItemPhotosView","SelectItemCategoryView"
@@ -38,7 +38,6 @@ class  Controller{
     }
     
     public function isUserSignedIn(){
-        echo "#######called usi##############";
         return (!empty($this->loggedInUsername));
     }
     
@@ -49,7 +48,7 @@ class  Controller{
     
     
     public function displayView($viewName,$viewParams = array()){
-        echo " display view called $viewName ";
+      //  echo " display view called $viewName ";
        
         try {
             // call a success/error/progress handler
@@ -58,12 +57,12 @@ class  Controller{
             $method_name = "Display".$viewName;
             $this->dataPassedToView['loggedInUsername'] = $this->loggedInUsername;
             if(is_callable(array('Controller', $method_name))){
-                echo "##x1";
+               // echo "##x1";
                 $this->$method_name($viewParams);
             }
             else{
-                echo "##x2";
-                echo("<br>#### view = ".$viewName."###");
+              //  echo "##x2";
+              //  echo("<br>#### view = ".$viewName."###");
                 $this->views[$viewName]->draw($this->dataPassedToView);
             }
             
@@ -80,8 +79,8 @@ class  Controller{
     
     public function UserInteractionHandle($method,$data){
         
-        echo "<h2>method called = $method<br>
-       data passed = ".print_r($data)."  </h3> ";
+//         echo "<h2>method called = $method<br>
+//        data passed = ".print_r($data)."  </h3> ";
 
        if(is_callable(array('Controller', $method))){
             $this->$method($data);
@@ -95,6 +94,7 @@ class  Controller{
     }
     
     public function logout(){
+    
         unset($this->loggedInUsername);
         gotoView("/Home");
     }
@@ -110,7 +110,7 @@ class  Controller{
     private function DisplayItemsTableView(){
         $allItems = $this->SqlHandler->getAllItems(); 
         $this -> dataPassedToView["queryResult"] = $allItems;
-        $this->views[ItemsTableView]->draw($this->dataPassedToView);
+        $this->views["ItemsTableView"]->draw($this->dataPassedToView);
     }
     
     private function DisplayAllRequestsView(){
@@ -122,7 +122,7 @@ class  Controller{
     }
     
     private function DisplayItemDetailsView($params){
-        echo "x34 called";
+     //   echo "x34 called";
         $itemID = $params["itemID"];
         
         $queryResult = $this->SqlHandler->getItem($itemID);
@@ -198,31 +198,58 @@ class  Controller{
     private function approveRequest($RID){
      
         $resultObjs = $this->SqlHandler->getRequestAndRelatedObjs($RID);
-        $item = $resultObjs["item"];     
-        $user = $resultObjs["user"];
-        $request = $resultObjs["request"];
-        
-        $itemID =$item->ItemID;
-        $email = $user->Email;
-        $this->SqlHandler->deleteRequestAndRelatedObjs($RID, $itemID);
-        // send email
-        $this->Mailer->sendRequrestApprovedEmail($item, $email);
-        
-        $dirname ="C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages\\".$itemID;
-        if(file_exists($dirname)){
-            array_map('unlink', glob("$dirname/*.*"));
-            rmdir($dirname);
+      
+        if(isset($resultObjs["item"])){
+            $item = $resultObjs["item"];
+            $user = $resultObjs["user"];
+            $request = $resultObjs["request"];
+            
+            $itemID =$item->ItemID;
+            $email = $user->Email;
+            $this->SqlHandler->deleteRequestAndRelatedObjs($RID, $itemID);
+            // send email
+            $this->Mailer->sendRequrestApprovedEmail($item, $email);
+            
+            $dirname ="C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages\\".$itemID;
+            if(file_exists($dirname)){
+                array_map('unlink', glob("$dirname/*.*"));
+                rmdir($dirname); 
+            }
+            $msg = "request sucessfully approved";
+            $this->popUpMsg($msg);
             gotoView("/Home");
+            
         }
+        else{
+            gotoView("/Error");
+        }
+            
+        
+        
+        
+        
+       
     }
     
     private function denyRequest($RID){
-        $resultObjs  = $this->SqlHandler->getRequestAndRelatedObjs($RID);
-        $item = $resultObjs["item"];
-        $user = $resultObjs["user"];
-        $request = $resultObjs["request"];
+//         $resultObjs  = $this->SqlHandler->getRequestAndRelatedObjs($RID);
+//         if(isset($resultObjs["user"]->UserID)){
+//             $item = $resultObjs["item"];
+//             $user = $resultObjs["user"];
+//             $request = $resultObjs["request"];
+            
+//             $this->SqlHandler->deleteRequest($RID);
+            
+//             // MAIL HERE
+            
+//             $msg = "request sucessfully denied";
+//             $this->popUpMsg($msg);
+//             gotoView("/Home");
+//         }
+//         else{
+//             gotoView("/Error");
+//         }
         
-        $this->SqlHandler->deleteRequest($RID);
         
     }
     
@@ -230,13 +257,13 @@ class  Controller{
     
     
     private function loginAttempt($data){
-        echo "loggin attempted";
+        //echo "loggin attempted";
         $username = strtolower($data["username"]);
         $password  = $data ["password"];
         $valid = true;
         $usernameValid = true;
         $hashedPassword= password_hash($password,PASSWORD_DEFAULT);
-        echo "<br>password = <br> $hashedPassword <br>";
+      //  echo "<br>password = <br> $hashedPassword <br>";
         // check if username is valid
         if(!(preg_match('/^[a-zA-Z0-9]{5,}$/', $username))) { // for english chars + numbers only
             // valid username, alphanumeric & longer than or equals 5 chars
@@ -263,7 +290,7 @@ class  Controller{
         }
         
         if($valid == true){
-            echo "## VALID LOGIN ##";
+          //  echo "## VALID LOGIN ##";
             $this->loggedInUsername = $username;
             $this->currentView = "ItemsTableView";
             gotoView("/Home");
@@ -271,7 +298,7 @@ class  Controller{
         else{
             gotoView("/login");
         }
-        echo "<br><h1>".$username."  ".$password."<br></h1>";       
+        //echo "<br><h1>".$username."  ".$password."<br></h1>";       
     }
    
 
@@ -404,7 +431,7 @@ class  Controller{
             $this->popUpMsg($errorMsg); 
         }
         if($valid == true){
-            echo "VALID REG !";
+           // echo "VALID REG !";
             $hashedPassword= password_hash($password,PASSWORD_DEFAULT);
             $this->SqlHandler->insertUser($username, $email, $hashedPassword);
             $msg = "Sucessfully registered!";
@@ -430,6 +457,8 @@ class  Controller{
             gotoView("/Request_item");
         }
         else{
+            $Msg = "request made";
+            $this->popUpMsg($Msg);
             $userID = $this->SqlHandler->getUser($this->loggedInUsername)->UserID;
             $this->SqlHandler->insertRequest($requestDesc, $itemID, $userID);
             gotoView("/Home");
@@ -445,7 +474,7 @@ class  Controller{
         
         $category = $data["Category"];
         // check if category is correct
-        
+     
         $cats = array("pet","phone","jewellery");
         if(in_array($category, $cats) == false){
             $valid = false;
@@ -511,7 +540,7 @@ class  Controller{
     }
     
     private function itemPhotosUploadRequest($data){
-        echo print_r($data);
+        //echo print_r($data);
         // SRROUND WITH TRY CATCH
         $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages";
         $itemID = $this->lastAddedItemID;;
@@ -520,10 +549,10 @@ class  Controller{
         $valid = true;
         $imgTypes = array("jpeg","jpg","png");
         // validation in this loop
-        echo "v1 got ";
-        echo print_r($data);
-        echo "files = ";
-        echo print_r($allImgs);
+//         echo "v1 got ";
+//         echo print_r($data);
+//         echo "files = ";
+//         echo print_r($allImgs);
         
      
         if($imgCount>10){
@@ -540,9 +569,6 @@ class  Controller{
                 $errorMsg = "a file was not of type png or jpeg";
                 $this->popUpMsg($errorMsg);
             }
-            
-            echo "<br>type = $type<br>";
-            echo "size = $size<br>";
         }
         if($valid == true){
             mkdir($path."\\".$itemID);
@@ -568,41 +594,12 @@ class  Controller{
     }
     
     private function itemCategorySelected($data){
-     
         $category = $data;
-        $msg = "got cat = $category";
-        $this->popUpMsg($msg);
-        //echo "<br><h1>got cat =$category </h1><br>";
         $this ->dataPassedToView["Category"] = $category;
         $this->currentView = "AddItemDetailsView";
         gotoView("/add_item_details");
     }
-    
-
-    
-//     private function itemRowClicked($itemID){
-//         echo "data passed = ".print_r($itemID)."  x= ".$itemID;
-      
-//       $queryResult = $this->SqlHandler->getItem($itemID);
-//       $item = $queryResult["item"];
-//       $foundByUser = $queryResult["user"];     
-//       // add validation !
-//       $this->dataPassedToView['item'] = $item;
-//       $this->dataPassedToView['user'] = $foundByUser;     
-//       $this -> currentView = "ItemDetailsView";
-//     }
-    
-  
-    
-
-    
-    
-  
-    
-    
-    
-    
-    
+     
     private function popUpMsg($error){
         $msg = "<br>* $error <br>";
         if(isset($this->dataPassedToView["error"])){
@@ -611,8 +608,7 @@ class  Controller{
         else{
             $this->dataPassedToView["error"] =$msg;
         }
-        echo "<br><h2>error! - $error</h2><br>";
-    }
+     }
     
   
 }

@@ -20,7 +20,7 @@ Class ItemDetailsView extends View{
         
        // $itemID = 
         $username = $foundByUser->Username;
-        $email = $foundByUser->Email;     
+       // $email = $foundByUser->Email;     
         $itemID = $itemToDisplay->ItemID;
         $name = $itemToDisplay->Name;
         $desc = $itemToDisplay->Description;
@@ -29,8 +29,8 @@ Class ItemDetailsView extends View{
         $date = $itemToDisplay->DateFound;
         $location = $itemToDisplay->Location;
         
-        $picsLocation = $itemToDisplay->PhotosFolderLoc;
-        
+       
+       
 //         $this->drawImageSlideShow($ID);
 //         $html = '
 //                 <!DOCTYPE html>

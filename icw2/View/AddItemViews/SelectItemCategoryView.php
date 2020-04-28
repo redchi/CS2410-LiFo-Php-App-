@@ -7,16 +7,6 @@ Class SelectItemCategoryView extends View{
     
     public function draw($data){
         parent::draw($data);
-        
-        //         $user = $data["user"];
-        //         $item = $data["item"];
-        
-        //         $itemName = $item->Name;
-        //         $itemType = $item->Category;
-        //         $userID = $user->UserID;
-        //         $itemID = $item->ItemID;
-        
-        
         $html = '
                 <!DOCTYPE html>
                 <html>

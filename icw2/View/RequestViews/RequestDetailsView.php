@@ -115,12 +115,23 @@ Class RequestDetailsView extends View{
 
     <div class="container">   
         <div style="height:0px;overflow:hidden">
-                 <form action = "/UserInteraction" id = "approve" method = "POST">
-        			<input type=hidden name = "approveRequest" value ="'.$requestID.'">
-        		</form>
-        		<form action = "/UserInteraction" id = "deny" method = "POST">
-        			<input type=hidden name = "denyRequest" value ="'.$requestID.'">
-        		</form>
+            <script>
+                function deny() {
+                  alert("Please wait while we send the deny email, the page may seem unresponsive, do not click any additional buttons you will automatically be redirected, press ok to continue.");
+                  document.getElementById(\'deny\').submit();
+                }
+                
+                function approve() {
+                  alert("Please wait while we send the approval email, the page may seem unresponsive, do not click any additional buttons you will automatically be redirected, press ok to continue.");
+                  document.getElementById(\'approve\').submit();
+                }
+            </script>
+             <form action = "/UserInteraction" id = "approve" method = "POST">
+    			<input type=hidden name = "approveRequest" value ="'.$requestID.'">
+    		</form>
+    		<form action = "/UserInteraction" id = "deny" method = "POST">
+    			<input type=hidden name = "denyRequest" value ="'.$requestID.'">
+    		</form>
         </div>
         
         <div class="col-md-12">
@@ -181,8 +192,8 @@ Class RequestDetailsView extends View{
     <div class="container">
         <div class="media-container-row title">
             <div class="col-12 col-md-8">
-                <div class="mbr-section-btn align-center"><a class="btn btn-primary display-4" onclick="document.getElementById(\'approve\').submit();">Approve</a>
-                    <a class="btn btn-info display-4" onclick="document.getElementById(\'deny\').submit();">Deny</a> <a class="btn btn-white display-4" href="'.URL."/view_item/".$itemID.'">View Item</a></div>
+                <div class="mbr-section-btn align-center"><a class="btn btn-primary display-4" onclick="approve()">Approve</a>
+                    <a class="btn btn-info display-4" onclick="deny()">Deny</a> <a class="btn btn-white display-4" href="'.URL."/view_item/".$itemID.'">View Item</a></div>
             </div>
         </div>
     </div>

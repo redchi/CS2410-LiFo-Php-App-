@@ -2,14 +2,13 @@
 
 include_once  "Controller/Controller.php";
 
-echo"<h3> post =  ".print_r($_POST)."</h3><br>";
+//"<h3> post =  ".print_r($_POST)."</h3><br>";
 //echo "<br> file = ".$_FILES['file']["name"]."<br>";
 session_start();
 
 define('URL', 'http://localhost');
 
 
-echo"<h3> requestedView =  ".print_r($requests)."</h3><br>";
 
 
 if(!isset($_SESSION['Controller'])){
@@ -27,25 +26,22 @@ else{
 
     $requestedView = $_GET["requestedView"];
     $requests = explode("/", $requestedView);
-    $firstReq = strtolower($requests[0]);
-    $secondReq = strtolower($requests[1]);
     $count = count($requests);
+    
+    if($count>=1){
+        $firstReq = strtolower($requests[0]);
+    }
+    if($count>=2){
+        $secondReq = strtolower($requests[1]);
+    }
+    
+    
+   
     $signedIn = $Controller->isUserSignedIn();
     $isadmin = $Controller->isUserAdmin();
     
-    echo "<br><h2>";
-    echo $Controller->loggedInUsername;
-    
-    if($signedIn == true){
-        echo " signed in";
-    }
-    else{
-        echo "not signed in";
-    }
-        
-        echo "<br></h2>";
-    
-    echo "<h1> 1 $signedIn</h1>";
+  
+   
     if($firstReq == "userinteraction" ){
         echo "USER INTERACTION !!";
         processUserinteractionData($Controller);

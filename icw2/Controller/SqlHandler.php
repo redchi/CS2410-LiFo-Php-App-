@@ -40,7 +40,7 @@ class SqlHandler{
     }
     
     public function getUserByEmail($email){
-        echo "called ! email - $email";
+       // echo "called ! email - $email";
         $sql = "SELECT * FROM users WHERE Email = :email";
         $namedParams = array("email"=>$email);
         $resultObjs = $this->Model->queryDatabase($sql,$namedParams);
@@ -62,7 +62,7 @@ class SqlHandler{
     public function getAllItems(){
         $sql = "SELECT * FROM items;";
        // $namedParams = array("limit"=>$limit,"offset"=>$offset);
-        $resultObjs = $this->Model->queryDatabase($sql,$namedParams);
+        $resultObjs = $this->Model->queryDatabase($sql);
         return $resultObjs;
     }
     
@@ -83,15 +83,12 @@ class SqlHandler{
         $sql = "SELECT * FROM items WHERE ItemID = :itemID;";
         $namedParams = array("itemID"=>$itemID);
         $resultObjs = $this->Model->queryDatabase($sql,$namedParams);
-        $itemObj = $resultObjs[0];
-        $sql = "SELECT users.Username,users.Email 
-                FROM users,items,userstofounditems
-                WHERE users.UserID = userstofounditems.UserID
-                AND items.ItemID = userstofounditems.ItemID
-                AND items.ItemID = :itemID;";
-        $resultObjs = $this->Model->queryDatabase($sql,$namedParams);    
-        $UserObj = $resultObjs[0];
-        $returnObjs = array("item"=>$itemObj,"user"=>$UserObj);
+        $itemObj = $resultObjs[0];      
+        $sql = "SELECT * FROM userstofounditems WHERE ItemID = :itemID;";
+        $resultObjs = $this->Model->queryDatabase($sql,$namedParams);
+        $UserID = $resultObjs[0]->UserID;
+        $User = $this->getUserByID($UserID);
+        $returnObjs = array("item"=>$itemObj,"user"=>$User);
         return $returnObjs;
     }
     
@@ -184,25 +181,20 @@ class SqlHandler{
     
     public function getAllRequests(){
         $sql = "SELECT * FROM requeststouseranditem;";
-    //    $namedParams = array("limit"=>$limit,"offset"=>$offset);
+   
         $resultObjs = $this->Model->queryDatabase($sql);  
-       
+    
         $outputArray = array();
         foreach($resultObjs as $obj){
             $userID = $obj->UserID;
             $itemID = $obj->ItemID;
             $requestID = $obj->RequestID;
             $user  = $this->getUserByID($userID);
-            $item = $this->getItem($itemID);
-            $request = $this->getRequest($requestID);
-            $entry = array("item"=>$item["item"],"user"=>$user,"request"=>$request);
-            echo "<br><br> #### START";
-            echo print_r($entry);
-            echo "<br><br>";
-            
-            array_push($outputArray,$entry);
+            $item = $this->getItem($itemID);    
+            $request = $this->getRequest($requestID);     
+            $entry = array("item"=>$item["item"],"user"=>$user,"request"=>$request);          
+            array_push($outputArray,$entry);           
         }
-        echo print_r($outputArray);
         return $outputArray;
     }
     

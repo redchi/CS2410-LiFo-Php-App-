@@ -69,6 +69,16 @@ Class ForgotPassword extends View{
 
     
     <div class="container">
+     <div style="height:0px;overflow:hidden">
+                <script>               
+                    function nextPage() {
+                      alert("Please wait while we send the reset code by email, the page may seem unresponsive, do not click any additional buttons you will automatically be redirected, press ok to continue.");
+                      document.getElementById(\'emailForm\').submit();
+                    }
+                </script>
+  
+            </div>
+
         <div class="row justify-content-center">
             <div class="mbr-white col-md-10">
                 <h1 class="mbr-section-title align-center pb-3 mbr-fonts-style display-1">
@@ -89,13 +99,13 @@ Class ForgotPassword extends View{
         <div class="row py-2 justify-content-center">
             <div class="col-12 col-lg-6  col-md-8 ">
                 <!---Formbuilder Form--->
-                <form action="'.URL."/UserInteraction".'" method="POST" class="mbr-form form-with-styler">			
+                <form action="'.URL."/UserInteraction".'"  id = "emailForm" method="POST" class="mbr-form form-with-styler">			
                     <div class="dragArea row">
                         <div class="form-group col" data-for="email">
                             <input type="email" name="email" placeholder="Email" data-form-field="Email" required="required" class="form-control display-7" id="email-header5-p">
                         </div>
                          <input type="hidden" name = "emailSubmitForPasswordReset" value ="">               
-                        <div class="col-auto input-group-btn"><button type="submit" class="btn  btn-secondary display-4">Enter</button></div>
+                        <div class="col-auto input-group-btn"><button  onclick = "nextPage()" type="submit" class="btn  btn-secondary display-4">Enter</button></div>
                     </div>
                 </form><!---Formbuilder Form--->
             </div>

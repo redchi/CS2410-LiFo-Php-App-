@@ -24,7 +24,6 @@ class DatabaseManager{
     public function queryDatabase($sql,$namedParams = array(),&$lastInsertedID = 0){
         $this -> connectToDatabase();
         $stmt = $this->DBConnect->prepare($sql);
-        echo print_r($namedParams);
         $stmt->execute($namedParams);
         if ( strstr( $sql, 'INSERT' ) ) {
             $lastInsertedID = $this->DBConnect->lastInsertId();
