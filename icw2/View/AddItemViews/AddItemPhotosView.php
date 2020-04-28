@@ -37,7 +37,7 @@ Class AddItemPhotosView extends View{
   
   
 </head>
-<body>
+<body  style = "background-color: #232323;">
   '.parent::DisplayNavBar().'
 
 <section class="engine"><a href="https://mobirise.info/y">html web templates</a></section><section class="header5 cid-rX6phDMPqy mbr-fullscreen" id="header5-13">

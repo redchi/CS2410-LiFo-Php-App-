@@ -46,7 +46,7 @@ Class AddItemDetailsView extends View{
   
   
 </head>
-<body>
+<body  style = "background-color: #232323;">
  '.parent::DisplayNavBar().'
 
 <section class="engine"><a href="https://mobirise.info/f">easy web builder</a></section><section class="header15 cid-rX5TMzCGZt mbr-fullscreen" id="header15-9">

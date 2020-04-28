@@ -7,31 +7,6 @@ Class ResetCodeView extends View{
     
     public function draw($data){
         parent::draw($data);
-        $html = '
-                <!DOCTYPE html>
-                <html>
-                <body>
-            
-                <h1>reset code enter VIEW!</h1>
-            
-                <br>
-                <form action = "/UserInteraction" method = "POST">
-                  <input type="text" name="resetCode" placeholder = "Reset Code"><br>
-                  <input type="hidden" name = "resetCodeEntered" value ="">
-                  <input type="submit" value="Submit">
-                </form>
-                <br>
-            
-            
-            
-            
-				<br>
-            
-            
-                </body>
-                </html>
-            
-        ';
         $html = '<!DOCTYPE html>
 <html  >
 <head>
@@ -60,7 +35,7 @@ Class ResetCodeView extends View{
   
   
 </head>
-<body>
+<body  style = "background-color: #232323;">
  '.parent::DisplayNavBar().'
 
 <section class="engine"><a href="https://mobirise.info/e">how to make your own site for free</a></section><section class="header5 cid-rXhWfKmPIx mbr-fullscreen" id="header5-15">

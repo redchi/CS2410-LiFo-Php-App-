@@ -30,9 +30,7 @@ Class View{
         
         if(isset($data["error"])){
             $this->DisplayError($data["error"]);
-        }
-      
-        // html goes here
+        }    
     }
     
     protected function DisplayError($error){
@@ -54,16 +52,6 @@ Class View{
         if($this->adminLogin == true){
             $adminViewButton = '<li class="nav-item"><a class="nav-link link text-white display-4" href="'.URL."/all_item_requests".'"><span class="mbri-key mbr-iconfont mbr-iconfont-btn"></span>Admin View</a></li>';
         }
-        
-        
-//         if($this->userLogin == true ){
-//             $additemButton = '<li class="nav-item"><a class="nav-link link text-white display-4" href="'.URL."/add_item_category".'"><span class="mbri-star mbr-iconfont mbr-iconfont-btn"></span>Add item</a></li>';
-//             $LoginLogoutButton = '<li class="nav-item"><a class="nav-link link text-white display-4" href="'.URL."/Logout". '"><span class="mbri-user mbr-iconfont mbr-iconfont-btn"></span> Logout</a></li>';
-//         }
-//         if($this->adminLogin == true){
-//             $adminViewButton = '<li class="nav-item"><a class="nav-link link text-white display-4" href="'.URL."/all_item_requests".'"><span class="mbri-home mbr-iconfont mbr-iconfont-btn"></span>Home</a></li>';
-//         }
-        
         
         
         $navbarHtml = '

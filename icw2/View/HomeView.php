@@ -7,23 +7,6 @@ Class HomeView extends View{
     
     public function draw($data){
         parent::draw($data);
-        $html = '
-                <!DOCTYPE html>
-                <html>
-                <body>
-            
-                <h1>Home View</h1>
-				<br>
-            
-            
-                </body>
-                </html>
-            
-        ';
-        
-        
-        
-        $header = '';
         
         $html = '
     <!DOCTYPE html>
@@ -54,7 +37,7 @@ Class HomeView extends View{
   
   
 </head>
-<body>
+<body  style = "background-color: #232323;">
   '.parent::DisplayNavBar().'
 
 <section class="engine"><a href="https://mobirise.info/q">free responsive site templates</a></section><section class="features14 cid-rXi8zPa3Ld" id="features14-1h">

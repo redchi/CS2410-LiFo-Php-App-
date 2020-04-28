@@ -2,8 +2,6 @@
 
 include_once  "Controller/Controller.php";
 
-//"<h3> post =  ".print_r($_POST)."</h3><br>";
-//echo "<br> file = ".$_FILES['file']["name"]."<br>";
 session_start();
 
 define('URL', 'http://localhost');
@@ -12,15 +10,10 @@ define('URL', 'http://localhost');
 
 
 if(!isset($_SESSION['Controller'])){
-    echo" ## session not set!";
     $Controller = new Controller();
-    //$controllerFound = false;
 }
 else{
-    //$Controller = new Controller();
-    
     $Controller = unserialize($_SESSION['Controller']);
-    //$controllerFound = true;
 }
 
 
@@ -161,10 +154,6 @@ else{
         echo "PAGE NOT FOUND!";
         echo"got = $firstReq";
         gotoView("/Error");
-        // page not found
-        //http://localhost/UploadedImages/107/0.png
-        //$Controller->displayView("pagenotfound");
-        
     }
 
 
@@ -189,7 +178,6 @@ function processUserinteractionData($Controller){
     else {
         $Controller ->UserInteractionHandle(null, null);
     }
-    // echo"##x3##".$Controller->currentView;
     $_POST = array(); 
 }
 
@@ -200,11 +188,7 @@ function gotoView($view){
     exit;
 }
 
-//echo 'br><a href="home/home">link text</a>'
 
-
-//    // echo"##x2##".$Controller->currentView;
-    
 
 
 ?>

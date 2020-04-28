@@ -7,31 +7,6 @@ Class ResetPasswordView extends View{
     
     public function draw($data){
         parent::draw($data);
-        $html = '
-                <!DOCTYPE html>
-                <html>
-                <body>
-            
-                <h1>Reset password VIEW!</h1>
-            
-                <br>
-                <form action = "/UserInteraction" method = "POST">
-                  <input type="password" name="password" placeholder = "password"><br>
-                  <input type="password" name="password2" placeholder ="Confirm password"><br><br>
-                  <input type="hidden" name = "newPasswordEntered" value ="">
-                  <input type="submit" value="Submit">
-                </form>
-                <br>
-            
-            
-
-				<br>
-            
-            
-                </body>
-                </html>
-            
-        ';
         
         $html = '<!DOCTYPE html>
 <html  >
@@ -61,7 +36,7 @@ Class ResetPasswordView extends View{
   
   
 </head>
-<body>
+<body  style = "background-color: #232323;">
 '.parent::DisplayNavBar().'
 <section class="engine"><a href="https://mobirise.info/l">free web templates</a></section><section class="header15 cid-rXhXwHmDU8 mbr-fullscreen" id="header15-16">
 

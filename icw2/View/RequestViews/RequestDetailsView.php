@@ -27,39 +27,7 @@ Class RequestDetailsView extends View{
       
         $requestDesc = $requestObj->Description;
         $requestID = $requestObj->RequestID;
-        $html = '
-                <!DOCTYPE html>
-                <html>
-                <body>
-            
-                <h1>REQUEST DETAILS VIEW</h1>
-
-    
-                 <h3>item name = '.$itemName.'<br>
-                    request description = '.$requestDesc.'
-                
-
-                    </h3>
-                
-                <br>
-
-
-<div style="height:0px;overflow:hidden">
-         <form action = "/UserInteraction" id = "approve" method = "POST">
-			<input type=hidden name = "approveRequest" value ="'.$requestID.'">
-		</form>
-		<form action = "/UserInteraction" id = "deny" method = "POST">
-			<input type=hidden name = "denyRequest" value ="">
-		</form>
-</div>
-			
-				<br>
-            
-            
-                </body>
-                </html>
-            
-        ';
+       
         
         $html = '<!DOCTYPE html>
 <html  >
@@ -91,7 +59,7 @@ Class RequestDetailsView extends View{
   
   
 </head>
-<body>
+<body  style = "background-color: #232323;">
  '.parent::DisplayNavBar().'
 
 <section class="engine"><a href="https://mobirise.info/z">best css templates</a></section><section class="mbr-section article content10 cid-rXi6IU1uU3" id="content10-1f">

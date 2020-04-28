@@ -6,37 +6,7 @@ Class LoginView extends View{
     }
     
     public function draw($data){
-        parent::draw($data);
-        $html = '
-                <!DOCTYPE html>
-                <html>
-                <body>
-            
-                <h1>LOGIN VIEW!</h1>
-
-                <br>
-                <form action = "'.URL."/UserInteraction".'" method = "POST">
-                  <label for="fname">Username</label><br>
-                  <input type="text" name="username"><br>
-                  <label for="lname">Password</label><br>
-                  <input type="password" name="password"><br><br>
-                  <input type="hidden" name = "loginAttempt" value ="">
-                  <input type="submit" value="Submit">
-                </form> 
-                <br>
-
-		         <br>
-				<form action = "'.URL."/forgot_password".'>
-					<input type=hidden name = "forgotPasswordClicked" value ="">
-					<button type = "submit">Forgot password</button>
-				</form>
-				<br>
-            
-            
-                </body>
-                </html>
-            
-        ';
+        parent::draw($data);  
         $html = '
 <!DOCTYPE html>
 <html  >
@@ -66,7 +36,7 @@ Class LoginView extends View{
   
   
 </head>
-<body>
+<body  style = "background-color: #232323;">
  '.parent::DisplayNavBar().'
 <section class="engine"><a href="https://mobirise.info/v">free html templates</a></section><section class="mbr-section form1 cid-rX61vtPYFe" id="form1-k">
 

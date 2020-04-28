@@ -60,7 +60,7 @@ Class ForgotPassword extends View{
   
   
 </head>
-<body>
+<body  style = "background-color: #232323;">
  '.parent::DisplayNavBar().'
 
 <section class="engine"><a href="https://mobirise.info/m">web design templates</a></section><section class="header5 cid-rX67acGoRh mbr-fullscreen" id="header5-p">

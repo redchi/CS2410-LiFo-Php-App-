@@ -10,18 +10,15 @@ class  Controller{
     private $currentView;
     private $dataPassedToView;
     
-    
-    private $SqlHandler;
     public $loggedInUsername;
+    private $SqlHandler;
+    
     private $Mailer;  
     
     private $passwordResetCode;
     private $emailUsed;
   
-    //private $isUserAdmin;
-    
     public function __construct(){
-     //   echo "**NEW CONTROLLER MADE!**";
         $viewNames = array("IntroScreenView","ItemsTableView"
             ,"RegisterView","LoginView","ItemDetailsView","AddItemDetailsView"
             ,"RequestItemView","AddItemPhotosView","SelectItemCategoryView"
@@ -47,9 +44,7 @@ class  Controller{
     }
     
     
-    public function displayView($viewName,$viewParams = array()){
-      //  echo " display view called $viewName ";
-       
+    public function displayView($viewName,$viewParams = array()){   
         try {
             // call a success/error/progress handler
             $this->dataPassedToView["userLoggedIn"] = $this->isUserSignedIn();
@@ -57,12 +52,9 @@ class  Controller{
             $method_name = "Display".$viewName;
             $this->dataPassedToView['loggedInUsername'] = $this->loggedInUsername;
             if(is_callable(array('Controller', $method_name))){
-               // echo "##x1";
                 $this->$method_name($viewParams);
             }
             else{
-              //  echo "##x2";
-              //  echo("<br>#### view = ".$viewName."###");
                 $this->views[$viewName]->draw($this->dataPassedToView);
             }
             
@@ -78,19 +70,13 @@ class  Controller{
     }
     
     public function UserInteractionHandle($method,$data){
-        
-//         echo "<h2>method called = $method<br>
-//        data passed = ".print_r($data)."  </h3> ";
-
        if(is_callable(array('Controller', $method))){
             $this->$method($data);
         }
         else{
-            // change this to server error when implemented
             gotoView("/Error");
         }
         $this->saveState();  
-       
     }
     
     public function logout(){
@@ -105,6 +91,12 @@ class  Controller{
     
     
 
+    
+    
+    
+    
+    
+    
 
     
     private function DisplayItemsTableView(){
@@ -122,13 +114,10 @@ class  Controller{
     }
     
     private function DisplayItemDetailsView($params){
-     //   echo "x34 called";
-        $itemID = $params["itemID"];
-        
+        $itemID = $params["itemID"];       
         $queryResult = $this->SqlHandler->getItem($itemID);
         $item = $queryResult["item"];
         $foundByUser = $queryResult["user"];
-        // add validation !
         if(empty($item)){
             throw new Exception('item not found');
         }
@@ -145,7 +134,6 @@ class  Controller{
         if(isset($item->Name) == false){
             throw new Exception('item  not found');
         }
-        
         $this->dataPassedToView['item'] = $item;
         $this->currentView = "RequestItemView";
         $this->views[$this->currentView]->draw($this->dataPassedToView);

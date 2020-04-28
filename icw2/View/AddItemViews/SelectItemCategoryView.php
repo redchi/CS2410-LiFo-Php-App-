@@ -6,37 +6,7 @@ Class SelectItemCategoryView extends View{
     }
     
     public function draw($data){
-        parent::draw($data);
-        $html = '
-                <!DOCTYPE html>
-                <html>
-                <body>
-            
-                <h1> select  Item  CAT  view!</h1>
-			    <br>
-                </h3>
-            
-      
-                <form action = "/UserInteraction" method="POST">
-                         <p>Category:</p>
-                         <select name="Category">
-                            <option value="Pet">Pet</option>
-                            <option value="Phone">Phone</option>
-                            <option value="Jewllery">Jewllery</option>
-                         </select>
-
-                        <input type=hidden name = "itemCategorySelected" value ="">
-                        <button type = "submit">submit</button>
-                    </form>
-
-
-
-            
-                </body>
-                </html>
-            
-        ';
-        
+        parent::draw($data);        
         
         $html = '
 <!DOCTYPE html>
@@ -67,7 +37,7 @@ Class SelectItemCategoryView extends View{
   
   
 </head>
-<body>
+<body style = "background-color: #232323;" >
  '.parent::DisplayNavBar().'
 
 <section class="engine"><a href="https://mobirise.info/l">free site templates</a></section><section class="features18 popup-btn-cards cid-rX6nPpUOly" id="features18-11">

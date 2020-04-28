@@ -18,9 +18,8 @@ Class ItemDetailsView extends View{
        
         
         
-       // $itemID = 
-        $username = $foundByUser->Username;
-       // $email = $foundByUser->Email;     
+     
+        $username = $foundByUser->Username;    
         $itemID = $itemToDisplay->ItemID;
         $name = $itemToDisplay->Name;
         $desc = $itemToDisplay->Description;
@@ -29,30 +28,8 @@ Class ItemDetailsView extends View{
         $date = $itemToDisplay->DateFound;
         $location = $itemToDisplay->Location;
         
-       
-       
-//         $this->drawImageSlideShow($ID);
-//         $html = '
-//                 <!DOCTYPE html>
-//                 <html>
-//                 <body>
-            
-//                 <h1>Item detail view!</h1>
-// 			    <br>
-//                 <h3>  got item! name = '.$name .'
-//                 <br> user found by = '.$username.'
-
-//                 </h3>
-
-//                 <form action = "/Request_item/'.$ID.'">
-//                 	<button type = "submit">Request this item</button>
-//                 </form>
-
-            
-//                 </body>
-//                 </html>
-            
-//         ';
+      
+    
         
         $html = '<!DOCTYPE html>
 <html  >

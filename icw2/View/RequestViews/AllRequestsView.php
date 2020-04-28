@@ -43,7 +43,7 @@ Class AllRequestsView extends View{
   
   
 </head>
-<body>
+<body style = "background-color: #232323;">
 '.parent::DisplayNavBar().'
 <section class="engine"><a href="https://mobirise.info/f">easy site maker</a></section><section class="section-table cid-rXi43xf3cL" id="table1-1b">
 
