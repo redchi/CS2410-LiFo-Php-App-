@@ -78,7 +78,7 @@ Class SelectItemCategoryView extends View{
   
 </head>
 <body>
- '.$this->DisplayNavBar().'
+ '.parent::DisplayNavBar().'
 
 <section class="engine"><a href="https://mobirise.info/l">free site templates</a></section><section class="features18 popup-btn-cards cid-rX6nPpUOly" id="features18-11">
 
