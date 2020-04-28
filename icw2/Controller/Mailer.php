@@ -1,46 +1,23 @@
 <?php
+/*
+ * CS2410 Internet Applications and Techniques Coursework
+ * Aston University - Asim Younas - 180050734 - April 2020
+ *
+ */
+
+/*
+ * Uses a third party Script -> PHP Mailer
+ * To send a html based email to a user
+ */
 class Mailer{
     
+   
     
-    public function sendTestEmail(){
-      
-        require_once 'ThirdPartyScripts/PhpMailer/PHPMailerAutoload.php';
-       // $itemname = "yeee item";
-        
-        $mail = new PHPMailer();
-        $mail->IsSMTP(); // enable SMTP
-        
-        $mail->SMTPDebug = 1; // debugging: 1 = errors and messages, 2 = messages only
-        $mail->SMTPAuth = true; // authentication enabled
-        $mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for Gmail
-        $mail->Host = "smtp.gmail.com";
-        $mail->Port = 465; // or 587
-        $mail->IsHTML(true);
-        $mail->Username = "testmailplan12@gmail.com";
-        $mail->Password = "sudocrem12";
-        $mail->SetFrom("testmailplan12@gmail.com");
-        $mail->Subject = "VERIFICATION EMAIL - Plan it";
-        $mail->Body =$this ->getPasswordResetHtmlBody();
-        
-        
-        $email = "asim1289@gmail.com";
-        $mail->SMTPDebug = 0;
-        
-        
-        $mail->AddAddress($email);
-        
-        if(!$mail->Send()) {
-            echo "Mailer Error: " . $mail->ErrorInfo;
-        } else {
-            echo "Message has been sent";
-        }
-        
-        
-    }
-    
-    
-    
-    
+    /*
+     * Sends the actual email via SMTP
+     * params = title,email body(in HTML), email to send to
+     * 
+     */
     private function sendEmail($title,$body,$sendTo){
         require_once 'ThirdPartyScripts/PhpMailer/PHPMailerAutoload.php';
         // $itemname = "yeee item";
@@ -58,10 +35,7 @@ class Mailer{
         $mail->Password = "sudocrem12";
         $mail->SetFrom("testmailplan12@gmail.com");
         $mail->Subject = $title;
-        $mail->Body =$body;
-        
-        
-      //  $email = "asim1289@gmail.com";
+        $mail->Body =$body;   
         $mail->SMTPDebug = 0;
         
         
@@ -74,26 +48,39 @@ class Mailer{
             return true;
         }
     }
-    
-    
-    
-    
-    public function sendRegistrationConfirmationEmail($username,$emailTo){
-        
-    }
-    
+
+ 
+    /*
+     * called by controller to send password reset email
+     * 
+     */
     public function sendPasswordResetCodeEmail($resetCode,$emailTo){
         $body = $this->getPasswordResetHtmlBody($resetCode);
         $title = "Password Reset - LiFo";
         return $this->sendEmail($title,$body,$emailTo);
     }
     
+    /*
+     * called by controller to send request approved email
+     */
     public function sendRequrestApprovedEmail($itemObj,$emailTo){
         $body = $this->getItemApprovedHtmlBody($itemObj);
         $title = "Request approved! - LiFo";
         return $this->sendEmail($title,$body,$emailTo);
     }
     
+    /*
+     * called by controller to send request denied email
+     */
+    public function sendRequrestDeniedEmail($itemObj,$emailTo){
+//         $body = $this->getItemApprovedHtmlBody($itemObj);
+//         $title = "Request approved! - LiFo";
+//         return $this->sendEmail($title,$body,$emailTo);
+    }
+    
+    /*
+     * stores html of email
+     */
     private function getPasswordResetHtmlBody($resetCode){
         
         
@@ -328,6 +315,9 @@ a[x-apple-data-detectors] {
         
     }
     
+    /*
+     * stores html of email
+     */
     private function getItemApprovedHtmlBody($itemObj){
         $itemname = $itemObj->Name;
         $textBody = "we have approved your request for $itemname, we will contact you soon on your delivery&nbsp;options.";
@@ -569,6 +559,12 @@ a[x-apple-data-detectors] {
         
     }
     
+    /*
+     * stores html of email
+     */
+    private function getItemDenyHtmlBody($itemObj){
+        
+    }
     
 }
 

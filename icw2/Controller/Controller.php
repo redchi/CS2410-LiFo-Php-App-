@@ -1,23 +1,54 @@
 <?php
+/*
+* CS2410 Internet Applications and Techniques Coursework
+* Aston University - Asim Younas - 180050734 - April 2020
+*
+*/
+
+
 include_once "View/View.php";
 include_once 'Controller/SqlHandler.php';
 include_once 'Controller/SecureRandom.php';
 include_once "Controller/Mailer.php";
 
+
+/*
+ * 
+ * Controlls the flow of data
+ * has methods for displaying views
+ * all user interactions in system 
+ * and log in/out systems
+ * 
+ */
 class  Controller{
     
+    // all views used by website as assoc array
     private $views;
+    
+    // current view being rendered
     private $currentView;
+    
+    // data to be passed to next view to be drawn
     private $dataPassedToView;
     
-    public $loggedInUsername;
+    //username of loged in user
+    private $loggedInUsername;
+  
+    //object for handling all sql
     private $SqlHandler;
     
+    // object for sending emails
     private $Mailer;  
     
+    // the password reset code generated
     private $passwordResetCode;
+    
+    // email used for password reset
     private $emailUsed;
   
+    /*
+     * Contructor, makes all the views as object
+     */
     public function __construct(){
         $viewNames = array("IntroScreenView","ItemsTableView"
             ,"RegisterView","LoginView","ItemDetailsView","AddItemDetailsView"
@@ -33,17 +64,23 @@ class  Controller{
         $this->Mailer = new Mailer();
         $this -> SqlHandler = new SqlHandler();
     }
-    
+    /*
+     * states if user is signed in
+     */
     public function isUserSignedIn(){
         return (!empty($this->loggedInUsername));
     }
     
-    
+    /*
+     * states if signed in user is admin or not
+     */
     public function isUserAdmin(){
         return ($this->isUserSignedIn() == true && $this->loggedInUsername =="admin");
     }
     
-    
+    /*
+     * called by index.php to display a certain view based on URL
+     */
     public function displayView($viewName,$viewParams = array()){   
         try {
             // call a success/error/progress handler
@@ -69,6 +106,11 @@ class  Controller{
     
     }
     
+    /*
+     * Called by index.php when a User interaction occurs
+     * calls the method specified and passes the data it needs
+     */
+    
     public function UserInteractionHandle($method,$data){
        if(is_callable(array('Controller', $method))){
             $this->$method($data);
@@ -79,32 +121,45 @@ class  Controller{
         $this->saveState();  
     }
     
+    /*
+     *called by index.php when /logout is in URL
+     *logs out user 
+     */
     public function logout(){
-    
         unset($this->loggedInUsername);
         gotoView("/Home");
     }
     
+    /*
+     * save the state of this controller object in session
+     * by serializing it 
+     */
     private function saveState(){
         $_SESSION['Controller'] = serialize($this);
     }
     
-    
 
+    /*
+     *  ** DISPLAY METHODS ** - methods called when drawing a specific view 
+     * unlike other views these need to query database for data needed to display view
+     * so they need their individual methods
+     * are called by displayView method
+     */
     
-    
-    
-    
-    
-    
-
-    
+    /*
+     * displays all items View
+     * querys database for all items in item table 
+     */
     private function DisplayItemsTableView(){
         $allItems = $this->SqlHandler->getAllItems(); 
         $this -> dataPassedToView["queryResult"] = $allItems;
         $this->views["ItemsTableView"]->draw($this->dataPassedToView);
     }
     
+    /*
+     * displays all request view
+     * querys database for all requests
+     */
     private function DisplayAllRequestsView(){
         
         $allObjs = $this->SqlHandler->getAllRequests();
@@ -113,6 +168,11 @@ class  Controller{
         $this->views[$this->currentView]->draw($this->dataPassedToView);
     }
     
+    /*
+     * displays a specific item details
+     * params = itemID
+     * querys database for item PDO object
+     */
     private function DisplayItemDetailsView($params){
         $itemID = $params["itemID"];       
         $queryResult = $this->SqlHandler->getItem($itemID);
@@ -127,6 +187,10 @@ class  Controller{
         $this->views[$this->currentView]->draw($this->dataPassedToView);
     }
     
+    /*
+     * Displays view for requesting an item
+     * params = itemID
+     */
     private function DisplayRequestItemView($data){
         $itemID  = $data['itemID'];
         $queryResult = $this->SqlHandler->getItem($itemID);
@@ -139,6 +203,11 @@ class  Controller{
         $this->views[$this->currentView]->draw($this->dataPassedToView);
         
     }
+    
+    /*
+     * Displays a item Request view for admin
+     * params = requestID
+     */
     private function DisplayRequestDetailsView($data){
         $requestID  = $data['requestID'];
         $this->currentView = "RequestDetailsView";
@@ -152,37 +221,22 @@ class  Controller{
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//     private function goto($relativePath){
-//        $path =  "./$relativePath";
-//        header('Location: '.$path);
-//        exit;
-//     }
-    
+    /*
+     * ** USER INTERACTION METHODS ** - methods called when there is a user interaction.
+     * can be anything from pressing a approve request button to adding a new item
+     * data is passed by index.php
+     * 
+     */
+
  
-    
+    /*
+     * called when admin approves a request
+     * deletes request from request table
+     * deletes that item from item table
+     * deletes its photos from server
+     * and send email to person that requested the item 
+     * pramas = requestID
+     */
     private function approveRequest($RID){
      
         $resultObjs = $this->SqlHandler->getRequestAndRelatedObjs($RID);
@@ -190,8 +244,6 @@ class  Controller{
         if(isset($resultObjs["item"])){
             $item = $resultObjs["item"];
             $user = $resultObjs["user"];
-            $request = $resultObjs["request"];
-            
             $itemID =$item->ItemID;
             $email = $user->Email;
             $this->SqlHandler->deleteRequestAndRelatedObjs($RID, $itemID);
@@ -211,50 +263,48 @@ class  Controller{
         else{
             gotoView("/Error");
         }
-            
-        
-        
-        
-        
-       
     }
     
+    /*
+     * denys a request for a item
+     * deletes that request from requests table
+     * send email to user that there request has been denied 
+     * 
+     */
     private function denyRequest($RID){
-//         $resultObjs  = $this->SqlHandler->getRequestAndRelatedObjs($RID);
-//         if(isset($resultObjs["user"]->UserID)){
-//             $item = $resultObjs["item"];
-//             $user = $resultObjs["user"];
-//             $request = $resultObjs["request"];
-            
-//             $this->SqlHandler->deleteRequest($RID);
-            
-//             // MAIL HERE
-            
-//             $msg = "request sucessfully denied";
-//             $this->popUpMsg($msg);
-//             gotoView("/Home");
-//         }
-//         else{
-//             gotoView("/Error");
-//         }
+        $resultObjs  = $this->SqlHandler->getRequestAndRelatedObjs($RID);
+        if(isset($resultObjs["user"]->UserID)){
+            $item = $resultObjs["item"];
+            $user = $resultObjs["user"];        
+            $email = $user->Email;
+            $this->SqlHandler->deleteRequest($RID);
+            $this->Mailer->sendRequrestDeniedEmail($item, $email);
+            $msg = "request sucessfully denied";
+            $this->popUpMsg($msg);
+            gotoView("/Home");
+        }
+        else{
+            gotoView("/Error");
+        }
         
         
     }
     
  
-    
+    /*
+     * attempt to login to server, called when login form is submitted
+     * checks if usernameis only alpha numerical and tryes to get that username from users table
+     * if it is found then compares the hashed password with submitted password
+     * if they match aswell then it loggs in th user 
+     * params = username,password
+     */
     
     private function loginAttempt($data){
-        //echo "loggin attempted";
         $username = strtolower($data["username"]);
         $password  = $data ["password"];
         $valid = true;
         $usernameValid = true;
-        $hashedPassword= password_hash($password,PASSWORD_DEFAULT);
-      //  echo "<br>password = <br> $hashedPassword <br>";
-        // check if username is valid
         if(!(preg_match('/^[a-zA-Z0-9]{5,}$/', $username))) { // for english chars + numbers only
-            // valid username, alphanumeric & longer than or equals 5 chars
             $valid = false;
             $usernameValid = false;
             $errorMsg = "Username must be at least 5 characters in length and only contain alphanumerical characters";
@@ -263,13 +313,11 @@ class  Controller{
     
         if($usernameValid == true){
             $userObj = $this->SqlHandler->getUser($username);
-            // check if username exits
             if($userObj == false){
                 $valid = false;
                 $errorMsg = "Invalid Credentials";
                 $this->popUpMsg($errorMsg);
             }
-            // if username exits check if passwords match
             else if(password_verify($password,$userObj->HashedPassword) != 1){
                 $valid = false;
                 $errorMsg = "Invalid Credentials";
@@ -278,7 +326,6 @@ class  Controller{
         }
         
         if($valid == true){
-          //  echo "## VALID LOGIN ##";
             $this->loggedInUsername = $username;
             $this->currentView = "ItemsTableView";
             gotoView("/Home");
@@ -286,10 +333,15 @@ class  Controller{
         else{
             gotoView("/login");
         }
-        //echo "<br><h1>".$username."  ".$password."<br></h1>";       
     }
    
 
+    /*
+     * called when email is submitted for password reset
+     * checks if that email is linked to a user
+     * if so then email that user a password reset code
+     * 
+     */
     
     private function emailSubmitForPasswordReset($data){
         $email = $data["email"];
@@ -317,6 +369,11 @@ class  Controller{
         }              
     }
     
+    /*
+     * called when a reset code is entered checks if that code 
+     * matches the one stored in controller if so then password can be reset
+     * params = reset code
+     */
     private function resetCodeEntered($data){
         $enteredResetcode = $data["resetCode"];
         if($enteredResetcode == $this->passwordResetCode){
@@ -332,6 +389,12 @@ class  Controller{
         
     }
     
+    /*
+     *called when resey code is correct
+     *enables user to reset there password
+     *and updates the  users table for new hashed password
+     *params = new password 
+     */
     private function newPasswordEntered($data){
         $password = $data["password"];
         $confirmPassword = $data["password2"];
@@ -367,8 +430,11 @@ class  Controller{
     }
     
     
-    
-    
+    /*
+     * called when a user trys to register a new account
+     * validates the fields and then inserts a new value into users table
+     * params = username, email, password, confirm password
+     */
     private function registerationAttempt($data){
         $username = $data["username"];
         $email = $data["email"];
@@ -434,7 +500,10 @@ class  Controller{
     }
     
     
-    
+    /*
+     *called when user requests an item
+     *params = request reason, item ID 
+     */
     private function itemRequested($data){
         $requestDesc = $data["request"];
         $itemID = $data["itemID"];
@@ -455,14 +524,18 @@ class  Controller{
           
     }
     
-    
+    //stores the last item ID added into the items table
     private $lastAddedItemID;
     
+    /*
+     * called when user trys to add a new item into the database
+     * validates input fields, then insert new item into items table
+     * pramas = item cateogry, item name, colour, Location, datefound, description 
+     */
     private function addItem($data){
         
-        $category = $data["Category"];
+        $category = $data["Category"];                
         // check if category is correct
-     
         $cats = array("pet","phone","jewellery");
         if(in_array($category, $cats) == false){
             $valid = false;
@@ -527,21 +600,21 @@ class  Controller{
         
     }
     
+    /*
+     * called when user trys to upload photos for recently added item
+     * validates all incomming files
+     * checks type and amount of files
+     * then makes a new directory in /UploadedImages based on itemID
+     * then adds files to this directory
+     * 
+     */
     private function itemPhotosUploadRequest($data){
-        //echo print_r($data);
-        // SRROUND WITH TRY CATCH
         $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages";
         $itemID = $this->lastAddedItemID;;
         $allImgs = $_FILES[$data];
         $imgCount = count($allImgs["name"]);
         $valid = true;
         $imgTypes = array("jpeg","jpg","png");
-        // validation in this loop
-//         echo "v1 got ";
-//         echo print_r($data);
-//         echo "files = ";
-//         echo print_r($allImgs);
-        
      
         if($imgCount>10){
             $valid = false;
@@ -551,7 +624,6 @@ class  Controller{
         for($i=0; $i<$imgCount && $valid == true; $i++){
             $name = $allImgs["name"][$i];
             $type = strtolower(pathinfo($name)["extension"]);
-            $size = $allImgs["size"][$i];
             if(in_array($type, $imgTypes) == false){
                 $valid = false;
                 $errorMsg = "a file was not of type png or jpeg";
@@ -581,13 +653,21 @@ class  Controller{
         
     }
     
+    /*
+     *called when item category is selected 
+     * params = category
+     */
     private function itemCategorySelected($data){
         $category = $data;
         $this ->dataPassedToView["Category"] = $category;
         $this->currentView = "AddItemDetailsView";
         gotoView("/add_item_details");
     }
-     
+    
+     /*
+      * passes a string/msg to view that will be poped up
+      * when the next view is loaded
+      */
     private function popUpMsg($error){
         $msg = "<br>* $error <br>";
         if(isset($this->dataPassedToView["error"])){

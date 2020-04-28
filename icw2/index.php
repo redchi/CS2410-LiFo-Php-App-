@@ -1,5 +1,24 @@
 <?php
+/*
+ * CS2410 Internet Applications and Techniques Coursework
+ * Aston University - Asim Younas - 180050734 - April 2020
+ *
+ */
 
+
+
+/*
+ * 
+ * Every URL in website domail is passed by htaccess to Index
+ * Index has 2 jobs:
+ * 
+ * 1) to tell controller which view to draw depending on the URl passed 
+ * 
+ * 2) if a UserInteraction was performed eg pressing submit on a form, 
+ *    pass this data to controller for processing.
+ *    All user Interactions have URL of /UserInteraction and the data is posted.
+ *    index will then pass that data to controller in a readable format
+ */
 include_once  "Controller/Controller.php";
 
 session_start();
@@ -7,7 +26,14 @@ session_start();
 define('URL', 'http://localhost');
 
 
-
+/*
+ * Controller instance is based on session
+ * so multiple users will have different controllers
+ * this is checking if controller already exsists, if not then make a new one
+ * the Controller object stores all data needed inside a session such 
+ * as logged in user name or current view so we dont need to sotre those in session global
+ * 
+ */
 
 if(!isset($_SESSION['Controller'])){
     $Controller = new Controller();
@@ -15,6 +41,19 @@ if(!isset($_SESSION['Controller'])){
 else{
     $Controller = unserialize($_SESSION['Controller']);
 }
+
+
+/*
+ * URL processing is happening here
+ * it checks what URL is being called
+ * all access validation is happeneing here
+ * so it checks if user has access to that URL
+ * by asking the controller if user is admin or is signed in
+ * then it either redirects user to a new URL if they dont have access
+ * or it tells controller to display a view 
+ * 
+ * 
+ */
 
 
     $requestedView = $_GET["requestedView"];
@@ -133,10 +172,6 @@ else{
             gotoView("/Home");
         }
     }
-    
-    
-    
-    
     elseif($firstReq == "view_item_request" && $count == 2){
         if($isadmin == true){
             $dataPassed = array("requestID" =>$secondReq);
@@ -152,11 +187,17 @@ else{
 
     else{
         echo "PAGE NOT FOUND!";
-        echo"got = $firstReq";
         gotoView("/Error");
     }
 
-
+/*
+ * 
+ * If the URL stated a user Interaction then no view is displayed
+ * instead a method is called inside controller based on the post data
+ * 
+ */
+    
+    
 function processUserinteractionData($Controller){
     if(count (array_keys ($_POST))>1){
         $method_name=null;
@@ -181,6 +222,11 @@ function processUserinteractionData($Controller){
     $_POST = array(); 
 }
 
+
+/*
+ * function used by everything for redirection
+ * 
+ */
 function gotoView($view){
     $controller = $GLOBALS["Controller"];
     $_SESSION['Controller'] = serialize($controller);

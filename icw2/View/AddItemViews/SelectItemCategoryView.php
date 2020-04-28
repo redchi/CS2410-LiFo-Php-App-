@@ -1,4 +1,13 @@
 <?php
+/*
+ * CS2410 Internet Applications and Techniques Coursework
+ * Aston University - Asim Younas - 180050734 - April 2020
+ *
+ */
+
+/*
+ * for info on views go to View/View.php
+ */
 Class SelectItemCategoryView extends View{
     
     public function __construct(){

@@ -1,4 +1,13 @@
 <?php
+/*
+ * CS2410 Internet Applications and Techniques Coursework
+ * Aston University - Asim Younas - 180050734 - April 2020
+ *
+ */
+
+/*
+ * for info on views go to View/View.php 
+ */
 Class AddItemDetailsView extends View{
     
     public function __construct(){
@@ -7,15 +16,7 @@ Class AddItemDetailsView extends View{
     
     public function draw($data){
         parent::draw($data);
-        $category = $data["Category"];
-//         $user = $data["user"];
-//         $item = $data["item"];
-      
-//         $itemName = $item->Name;
-//         $itemType = $item->Category;
-//         $userID = $user->UserID;
-//         $itemID = $item->ItemID;
-        
+        $category = $data["Category"];    
         
         $html = '
 <!DOCTYPE html>

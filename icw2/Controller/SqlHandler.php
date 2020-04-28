@@ -1,7 +1,18 @@
 <?php
+/*
+ * CS2410 Internet Applications and Techniques Coursework
+ * Aston University - Asim Younas - 180050734 - April 2020
+ *
+ */
 include_once 'Model/DatabaseManager.php';
+
+/*
+ * stores all of the sql used by the website and the controller
+ * enables controller to easily get a PDO object of a query
+ * uses prepared statements for proection agains SQL injection attacks
+ */
 class SqlHandler{
-    
+    // stores the model used
     private $Model;
 
     public function __construct(){
@@ -94,10 +105,10 @@ class SqlHandler{
     
     public function addItem($itemDetails,$userID = 3){
         $itemID = 0;
-        $sql =   "INSERT INTO Items (Name, Description, Category,Colour,Location,DateFound,PhotosFolderLoc)
+        $sql =   "INSERT INTO Items (Name, Description, Category,Colour,Location,DateFound)
               VALUES (:name, :desc, :cat,:colour,:loc,:date,:pic);";
         $namedParams = array("name"=>$itemDetails["name"],"desc"=>$itemDetails["desc"],"cat"=>$itemDetails["category"],
-            "colour"=>$itemDetails["colour"],"loc"=>$itemDetails["location"],"date"=>$itemDetails["date"],"pic"=>"remove this col!");
+            "colour"=>$itemDetails["colour"],"loc"=>$itemDetails["location"],"date"=>$itemDetails["date"]);
         $resultObjs = $this->Model->queryDatabase($sql,$namedParams,$itemID);
         
         $sql = "INSERT INTO userstofounditems (ItemID,UserID) VALUES (:itemID,:userID)";
@@ -124,8 +135,8 @@ class SqlHandler{
             $itemDesc = "$itemName description ";
             $itemCat = $cats[rand(0,2)];
             $itemID = 0;
-            $sql =   "INSERT INTO Items (Name, Description, Category,Colour,Location,DateFound,PhotosFolderLoc)
-              VALUES (:name, :desc, :cat,:colour,:loc,:date,:pic);";
+            $sql =   "INSERT INTO Items (Name, Description, Category,Colour,Location,DateFound)
+              VALUES (:name, :desc, :cat,:colour,:loc,:date);";
             
             $namedParams = array("name"=>$itemName,"desc"=>$itemDesc,"cat"=>$itemCat,
                 "colour"=>$itemColour,"loc"=>$itemLoc,"date"=>$itemDateFound,"pic"=>$itemsPhto);

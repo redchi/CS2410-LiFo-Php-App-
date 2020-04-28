@@ -1,4 +1,10 @@
 <?php
+/*
+ * CS2410 Internet Applications and Techniques Coursework
+ * Aston University - Asim Younas - 180050734 - April 2020
+ *
+ */
+
 include_once 'View/IntroScreenView.php';
 include_once 'View/ItemViews/ItemsTableView.php';
 include_once 'View/ItemViews/ItemDetailsView.php';
@@ -15,6 +21,13 @@ include_once 'View/RequestViews/AllRequestsView.php';
 include_once 'View/RequestViews/RequestDetailsView.php';
 include_once 'View/HomeView.php';
 include_once 'View/ErrorView.php';
+
+/*
+ * Parent object of all views
+ * views will echo out the html when the draw method is called
+ * 
+ * this parent object will handle functions such as displaying pop up alert and the nav bar
+ */
 Class View{
     
     protected $adminLogin;
@@ -24,6 +37,13 @@ Class View{
         //nothing
     }
     
+    /*
+     * template method will be overriden by childern
+     * will store the html body of view and echo it out
+     * this will be called by controller for specific view
+     * data needed to render the view is passed as an assoc array -> $data
+     * will have everything form PDO objects and booleans
+     */
     public function draw($data){
         $this->adminLogin = $data["adminLoggedIn"];
         $this->userLogin = $data["userLoggedIn"];
@@ -32,11 +52,16 @@ Class View{
             $this->DisplayError($data["error"]);
         }    
     }
-    
+    /*
+     * displays an pop up alert
+     */
     protected function DisplayError($error){
         echo "<script type='text/javascript'>alert('$error');</script>";  
     }
 
+    /*
+     * displays nav bar
+     */
     protected function DisplayNavBar(){
       
         
@@ -72,11 +97,11 @@ Class View{
         <div class="menu-logo">
             <div class="navbar-brand">
                 <span class="navbar-logo">
-                    <a href="https://mobirise.co">
+                    <a href="'.URL."/Home".'">
                          <img src="'.URL.'/View/assets/images/logo1-122x122.png" alt="Mobirise" title="" style="height: 3.8rem;">
                     </a>
                 </span>
-                <span class="navbar-caption-wrap"><a class="navbar-caption text-white display-5" href="https://mobirise.co">Find The Lost</a></span>
+                <span class="navbar-caption-wrap"><a class="navbar-caption text-white display-5" href="'.URL."/Home".'">Find The Lost</a></span>
             </div>
         </div>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">

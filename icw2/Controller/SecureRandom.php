@@ -1,5 +1,14 @@
 <?php
+/*
+ * CS2410 Internet Applications and Techniques Coursework
+ * Aston University - Asim Younas - 180050734 - April 2020
+ *
+ */
 
+/*
+ * used by controller to make a code for password reset
+ * 
+ */
 class SecureRandom {
     
     private static function crypto_rand_secure($min, $max) {
@@ -16,10 +25,10 @@ class SecureRandom {
         return $min + $rnd;
     }
     
+    
     public static function getToken($length=32){
         $token = "";
         $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      //  $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
         $codeAlphabet.= "0123456789";
         for($i=0;$i<$length;$i++){
             $token .= $codeAlphabet[SecureRandom::crypto_rand_secure(0,strlen($codeAlphabet))];
