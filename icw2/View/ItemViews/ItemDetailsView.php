@@ -275,37 +275,56 @@ Class ItemDetailsView extends View{
         $dir = ".\UploadedImages\\".$itemID;
       $path =URL."/UploadedImages";
 
-        $folder = scandir($dir,1);
-        $count = count($folder) - 2;
-
-        $allPicsBlockHtml = "";
-     
-        for($i=0; $i<$count; $i++){
-            if($i+1 == $count){
-                $active = "active";
+      if(file_exists($dir)== true){
+          
+      
+            $folder = scandir($dir,1);
+            $count = count($folder) - 2;
+    
+            $allPicsBlockHtml = "";
+         
+            for($i=0; $i<$count; $i++){
+                if($i+1 == $count){
+                    $active = "active";
+                }
+                else{
+                    $active = "";
+                }
+                $pic = $folder[$i];
+                $picPath = $path."/"."$itemID/".$pic; 
+                $picHtml = 
+                '	<div class="carousel-item slider-fullscreen-image '.$active.'" data-bg-video-slide="false" style="background-image: url('.$picPath.');">
+    			<div class="container container-slide">
+    			<div class="image_wrapper">
+    			<img src="'.$picPath.'">
+    			<div class="carousel-caption justify-content-center">
+    			<div class="col-10 align-center">
+    			</div></div></div></div></div>';
+                $allPicsBlockHtml = $allPicsBlockHtml.$picHtml;
             }
-            else{
-                $active = "";
-            }
-            $pic = $folder[$i];
-            $picPath = $path."/"."$itemID/".$pic; 
-            $picHtml = 
-            '	<div class="carousel-item slider-fullscreen-image '.$active.'" data-bg-video-slide="false" style="background-image: url('.$picPath.');">
-			<div class="container container-slide">
-			<div class="image_wrapper">
-			<img src="'.$picPath.'">
-			<div class="carousel-caption justify-content-center">
-			<div class="col-10 align-center">
-			</div></div></div></div></div>';
-            $allPicsBlockHtml = $allPicsBlockHtml.$picHtml;
-        }
-     
-        $block = '<div class="carousel-inner" role="listbox">
-            '.$allPicsBlockHtml.'
-           </div>';
-        return $block;
-        
-     
+         
+          
+      }
+      else{
+          
+          $picPath = URL."/UploadedImages/Default/NoImageAvailable.jpg";
+          
+          $allPicsBlockHtml = '	<div class="carousel-item slider-fullscreen-image active" data-bg-video-slide="false" style="background-image: url('.$picPath.');">
+    			<div class="container container-slide">
+    			<div class="image_wrapper">
+    			<img src="'.$picPath.'">
+    			<div class="carousel-caption justify-content-center">
+    			<div class="col-10 align-center">
+    			</div></div></div></div></div>';
+          
+          
+          
+      }
+      
+      $block = '<div class="carousel-inner" role="listbox">
+                '.$allPicsBlockHtml.'
+               </div>';
+      return $block;
 
         
        
