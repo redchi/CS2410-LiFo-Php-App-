@@ -105,8 +105,8 @@ class SqlHandler{
     
     public function addItem($itemDetails,$userID = 3){
         $itemID = 0;
-        $sql =   "INSERT INTO Items (Name, Description, Category,Colour,Location,DateFound)
-              VALUES (:name, :desc, :cat,:colour,:loc,:date,:pic);";
+        $sql =   "INSERT INTO items (Name, Description, Category,Colour,Location,DateFound)
+              VALUES (:name, :desc, :cat,:colour,:loc,:date);";
         $namedParams = array("name"=>$itemDetails["name"],"desc"=>$itemDetails["desc"],"cat"=>$itemDetails["category"],
             "colour"=>$itemDetails["colour"],"loc"=>$itemDetails["location"],"date"=>$itemDetails["date"]);
         $resultObjs = $this->Model->queryDatabase($sql,$namedParams,$itemID);
@@ -135,7 +135,7 @@ class SqlHandler{
             $itemDesc = "$itemName description ";
             $itemCat = $cats[rand(0,2)];
             $itemID = 0;
-            $sql =   "INSERT INTO Items (Name, Description, Category,Colour,Location,DateFound)
+            $sql =   "INSERT INTO items (Name, Description, Category,Colour,Location,DateFound)
               VALUES (:name, :desc, :cat,:colour,:loc,:date);";
             
             $namedParams = array("name"=>$itemName,"desc"=>$itemDesc,"cat"=>$itemCat,

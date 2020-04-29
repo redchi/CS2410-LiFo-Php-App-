@@ -19,12 +19,6 @@ Class ItemDetailsView extends View{
         
         $itemToDisplay = $data['item'];
         $foundByUser = $data['user'];
-        $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages";
-        $dir = scandir($path,1);
-        echo "##z1";
-        echo print_r($dir);
-   
-       
         
         
      
@@ -258,7 +252,7 @@ Class ItemDetailsView extends View{
     
     
     private function drawImageSlideShow($itemID){
-        $dir = ".\UploadedImages\\".$itemID;
+        $dir = IMG_FOLDER."/".$itemID;
       $path =URL."/UploadedImages";
 
       if(file_exists($dir)== true){

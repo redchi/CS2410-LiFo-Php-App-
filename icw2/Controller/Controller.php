@@ -250,7 +250,7 @@ class  Controller{
             // send email
             $this->Mailer->sendRequrestApprovedEmail($item, $email);
             
-            $dirname ="C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages\\".$itemID;
+            $dirname =IMG_FOLDER."/".$itemID;
             if(file_exists($dirname)){
                 array_map('unlink', glob("$dirname/*.*"));
                 rmdir($dirname); 
@@ -609,7 +609,7 @@ class  Controller{
      * 
      */
     private function itemPhotosUploadRequest($data){
-        $path = "C:\Users\asim1\git\CS2410 LiFo Php App\icw2\UploadedImages";
+        $path = IMG_FOLDER;
         $itemID = $this->lastAddedItemID;;
         $allImgs = $_FILES[$data];
         $imgCount = count($allImgs["name"]);

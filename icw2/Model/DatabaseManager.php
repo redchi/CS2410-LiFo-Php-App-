@@ -80,7 +80,6 @@ class DatabaseManager{
         Colour varchar(255) NOT NULL,
         Location varchar(255) NOT NULL,
         DateFound DATE NOT NULL,
-        PhotosFolderLoc varchar(500),
         PRIMARY KEY(ItemID)
         );
        
