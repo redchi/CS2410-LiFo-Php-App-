@@ -87,12 +87,12 @@ class DatabaseManager{
         CREATE TABLE userstofounditems (
             ItemID int NOT NULL,
            	UserID int NOT NULL,      
-           	CONSTRAINT ItemID_FK FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON DELETE CASCADE,    
+           	CONSTRAINT ItemID_FK FOREIGN KEY (ItemID) REFERENCES items (ItemID) ON DELETE CASCADE,    
             CONSTRAINT UserID_FK FOREIGN KEY (UserID) REFERENCES users (UserID) ON DELETE CASCADE
         );
         
         CREATE TABLE requests(
-            RequestID int NOT NULL,
+            RequestID int NOT NULL AUTO_INCREMENT,
       		Description varchar(1000)NOT NULL,
             PRIMARY KEY(RequestID)
         );
@@ -101,7 +101,7 @@ class DatabaseManager{
             RequestID int NOT NULL,
       		ItemID int NOT NULL,
            	UserID int NOT NULL,	
-           	CONSTRAINT ItemID_FK2 FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON DELETE CASCADE,
+           	CONSTRAINT ItemID_FK2 FOREIGN KEY (ItemID) REFERENCES items (ItemID) ON DELETE CASCADE,
       		CONSTRAINT RequestID_FK FOREIGN KEY (RequestID) REFERENCES requests (RequestID) ON DELETE CASCADE,
             CONSTRAINT UserID_FK2 FOREIGN KEY (UserID) REFERENCES users (UserID) ON DELETE CASCADE
         );
@@ -110,16 +110,7 @@ class DatabaseManager{
         
         
         
-        
-       INSERT INTO Items (Name, Description, Category,Colour,Location,DateFound,PhotosFolderLoc)
-        VALUES ("itemtest", "desc", "catx","red",Birmingham,"1000-01-01","pics/");     
-       
-       use like
-       
-        INSERT INTO Items (Name, Description, Category,Colour,Location,DateFound,PhotosFolderLoc)
-        VALUES ("iteasdmtest", "desc", "catx","red","Birmingham","1000-01-01","picsads/");       
-		SELECT LAST_INSERT_ID() AS LastID;
-       
+
  
  * 
  */
