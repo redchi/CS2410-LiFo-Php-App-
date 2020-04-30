@@ -35,6 +35,7 @@ Class RequestItemView extends View{
                   <input type="text" name="request" placeholder = "request description" requred><br>      
                 	    <input type=hidden name = "itemID" value ="'.$item->ItemID.'">
                         <input type=hidden name = "itemRequested" value ="">
+                        <input type=hidden name = "authKey" value ="'.$data["key"].'">
                 	<button type = "submit">submit</button>
                 </form>
             
@@ -98,6 +99,7 @@ Class RequestItemView extends View{
                                     <textarea name="request" placeholder="Request reason" data-form-field="Message" class="form-control px-3 display-7" id="message-header15-w"></textarea>
                                 </div>
                          <input type=hidden name = "itemID" value ="'.$item->ItemID.'">
+                           <input type=hidden name = "authKey" value ="'.$data["key"].'">
                         <input type=hidden name = "itemRequested" value ="">
                 	
                                 <div class="col-md-12 input-group-btn"><button type="submit" class="btn btn-secondary btn-form display-4">Make request</button></div>

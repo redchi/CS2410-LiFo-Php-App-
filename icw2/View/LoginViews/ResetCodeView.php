@@ -78,6 +78,7 @@ Class ResetCodeView extends View{
                             <input type="text" name="resetCode" placeholder="Reset Code" required="required" class="form-control display-7" id="email-header5-15">
                         </div>
                         <input type="hidden" name = "resetCodeEntered" value ="">
+                        <input type=hidden name = "authKey" value ="'.$data["key"].'">
                         <div class="col-auto input-group-btn"><button type="submit" class="btn  btn-secondary display-4">Enter</button></div>
                     </div>
                 </form><!---Formbuilder Form--->

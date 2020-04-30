@@ -52,7 +52,8 @@ Class AddItemPhotosView extends View{
 <section class="engine"><a href="https://mobirise.info/y">html web templates</a></section><section class="header5 cid-rX6phDMPqy mbr-fullscreen" id="header5-13">
 <div style="height:0px;overflow:hidden">
     <form action="/UserInteraction" id = "uploadphotosform"method ="POST" enctype="multipart/form-data">
-                    <input type = "file"  id = "uploadimgbr" name="images[]" multiple>                
+                    <input type = "file"  id = "uploadimgbr" name="images[]" multiple>    
+                     <input type=hidden name = "authKey" value ="'.$data["key"].'">            
                     <input type="hidden" name="itemPhotosUploadRequest" value="images">
     </form>    
 </div>

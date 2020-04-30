@@ -16,31 +16,7 @@ Class ForgotPassword extends View{
     
     public function draw($data){
         parent::draw($data);
-        $html = '
-                <!DOCTYPE html>
-                <html>
-                <body>
-            
-                <h1>FORGOT PASSWORD VIEW!</h1>
-            
-                <br>
-                <form action = "/UserInteraction" method = "POST">
-                  <input type="text" name="email" placeholder =email required><br>
-                  <input type="hidden" name = "emailSubmitForPasswordReset" value ="">
-                  <input type="submit" value="Submit">
-                </form>
-                <br>
-            
-            
-            
-            
-				<br>
-            
-            
-                </body>
-                </html>
-            
-        ';
+
         $html = '<!DOCTYPE html>
 <html  >
 <head>
@@ -113,7 +89,8 @@ Class ForgotPassword extends View{
                         <div class="form-group col" data-for="email">
                             <input type="email" name="email" placeholder="Email" data-form-field="Email" required="required" class="form-control display-7" id="email-header5-p">
                         </div>
-                         <input type="hidden" name = "emailSubmitForPasswordReset" value ="">               
+                         <input type="hidden" name = "emailSubmitForPasswordReset" value ="">  
+                         <input type=hidden name = "authKey" value ="'.$data["key"].'">             
                         <div class="col-auto input-group-btn"><button  onclick = "nextPage()" type="submit" class="btn  btn-secondary display-4">Enter</button></div>
                     </div>
                 </form><!---Formbuilder Form--->

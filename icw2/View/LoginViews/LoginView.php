@@ -76,6 +76,7 @@ Class LoginView extends View{
                             <input type="password" name="password" data-form-field="Phone" class="form-control display-7" placeholder="Password" id="phone-form1-k">
                         </div>
 						<input type="hidden" name = "loginAttempt" value ="">
+                         <input type=hidden name = "authKey" value ="'.$data["key"].'">
                         <div class="col-md-12 input-group-btn align-center"><button type="submit" class="btn btn-form btn-secondary display-4">Log in</button></div>
                     </div>
                 </form><!---Formbuilder Form--->

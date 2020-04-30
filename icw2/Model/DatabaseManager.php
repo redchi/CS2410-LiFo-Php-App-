@@ -33,7 +33,7 @@ class DatabaseManager{
     
     /*
      * query the database
-     * uses PDO to prepare the sql
+     * uses PDO to prepare the statement
      * then passes in the namedParams and executes it
      * 
      * params = sql,namedparams, (by ref) lastInsertedID - if an insert is executed then changes this variable to lasted inserted ID

@@ -7,6 +7,7 @@
 
 /*
  * used by controller to make a code for password reset
+ * and a user interaction auth key
  * 
  */
 class SecureRandom {

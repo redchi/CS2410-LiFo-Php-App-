@@ -23,8 +23,8 @@ include_once  "Controller/Controller.php";
 
 session_start();
 
-define('URL', 'https://180050734.cs2410-web01pvm.aston.ac.uk');
-define('IMG_FOLDER',"/public_html/UploadedImages");
+define('URL', 'http://localhost');
+define('IMG_FOLDER',"icw2/UploadedImages");
 
 /*
  * Controller instance is based on session
@@ -199,26 +199,37 @@ else{
     
     
 function processUserinteractionData($Controller){
-    if(count (array_keys ($_POST))>1){
-        $method_name=null;
-        foreach((array_keys ($_POST)) as $key){
-            if(method_exists ($Controller, $key)){
-                $method_name = $key;
-                unset($_POST[$key]);
+    $validKey = false;
+    if(isset($_POST["authKey"])){
+        $validKey = $Controller->verifyAuthToken($_POST["authKey"]);
+    }
+    if($validKey == true){
+        unset($_POST["authKey"]);
+        if(count (array_keys ($_POST))>1){
+            $method_name=null;
+            foreach((array_keys ($_POST)) as $key){
+                if(method_exists ($Controller, $key)){
+                    $method_name = $key;
+                    unset($_POST[$key]);
+                }
             }
+            $Controller->UserInteractionHandle($method_name,$_POST);
         }
-        $Controller->UserInteractionHandle($method_name,$_POST);
+        
+        else if(count(array_keys($_POST)) == 1){
+            $method_name = key($_POST);
+            $data = $_POST[$method_name];
+            $Controller ->UserInteractionHandle($method_name, $data);
+        }
+        
+        else {
+            $Controller ->UserInteractionHandle(null, null);
+        }
     }
-    
-    else if(count(array_keys($_POST)) == 1){
-        $method_name = key($_POST);
-        $data = $_POST[$method_name];
-        $Controller ->UserInteractionHandle($method_name, $data);
+    else{
+        gotoView("/Error");
     }
-    
-    else {
-        $Controller ->UserInteractionHandle(null, null);
-    }
+   
     $_POST = array(); 
 }
 

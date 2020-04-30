@@ -74,7 +74,7 @@ Class ResetPasswordView extends View{
                                     <input type="password" name="password2" placeholder="Confirm Password" data-form-field="Phone" class="form-control px-3 display-7" id="phone-header15-16">
                                 </div>
                                  <input type="hidden" name = "newPasswordEntered" value ="">
-                 
+                                  <input type=hidden name = "authKey" value ="'.$data["key"].'">
 
                                 <div class="col-md-12 input-group-btn"><button type="submit" class="btn btn-secondary btn-form display-4">Change Password</button></div>
                             </div>

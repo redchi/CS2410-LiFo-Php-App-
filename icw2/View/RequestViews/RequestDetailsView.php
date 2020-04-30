@@ -105,9 +105,11 @@ Class RequestDetailsView extends View{
             </script>
              <form action = "/UserInteraction" id = "approve" method = "POST">
     			<input type=hidden name = "approveRequest" value ="'.$requestID.'">
+                 <input type=hidden name = "authKey" value ="'.$data["key"].'">
     		</form>
     		<form action = "/UserInteraction" id = "deny" method = "POST">
     			<input type=hidden name = "denyRequest" value ="'.$requestID.'">
+                <input type=hidden name = "authKey" value ="'.$data["key"].'">
     		</form>
         </div>
         

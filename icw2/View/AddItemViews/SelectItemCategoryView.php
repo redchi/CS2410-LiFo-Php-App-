@@ -61,6 +61,7 @@ Class SelectItemCategoryView extends View{
             <div class="card p-3 col-12 col-md-6 col-lg-4">
                     <form action = "/UserInteraction" method="POST" id = "pet">
                         <input type=hidden name = "itemCategorySelected" value ="pet">
+                         <input type=hidden name = "authKey" value ="'.$data["key"].'">
                     </form>
                 <div class="card-wrapper ">
                     <div class="card-img">
@@ -78,6 +79,8 @@ Class SelectItemCategoryView extends View{
             <div class="card p-3 col-12 col-md-6 col-lg-4">
                     <form action = "/UserInteraction" method="POST" id = "phone">
                         <input type=hidden name = "itemCategorySelected" value ="phone">
+                         <input type=hidden name = "authKey" value ="'.$data["key"].'">
+                         
                     </form>
                 <div class="card-wrapper">
                     <div class="card-img">
@@ -96,6 +99,7 @@ Class SelectItemCategoryView extends View{
             <div class="card p-3 col-12 col-md-6 col-lg-4">
 			    <form action = "/UserInteraction" method="POST" id = "jewellery">
                         <input type=hidden name = "itemCategorySelected" value ="jewellery">
+                        <input type=hidden name = "authKey" value ="'.$data["key"].'">
                     </form>
                 <div class="card-wrapper">
                     <div class="card-img">

@@ -87,7 +87,7 @@ Class AddItemDetailsView extends View{
                                 </div>
                                    <input type="hidden" name = "Category" value ="'.$category.'">
                             	  <input type="hidden" name = "addItem" value ="">
-                                
+                                     <input type=hidden name = "authKey" value ="'.$data["key"].'">
                                 <div class="col-md-12 input-group-btn"><button type="submit" class="btn btn-secondary btn-form display-4">Submit item details</button></div>
                             </div>
                         </form><!---Formbuilder Form--->
