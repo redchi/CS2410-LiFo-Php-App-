@@ -610,6 +610,13 @@ class  Controller{
      */
     private function itemPhotosUploadRequest($data){
         $path = IMG_FOLDER;
+        if(file_exists(IMG_FOLDER)){
+            echo "DIR EXITSS !";
+        }
+        else{
+            echo "NOPE :(";
+        }
+        die();
         $itemID = $this->lastAddedItemID;;
         $allImgs = $_FILES[$data];
         $imgCount = count($allImgs["name"]);
@@ -631,13 +638,13 @@ class  Controller{
             }
         }
         if($valid == true){
-            mkdir($path."\\".$itemID);
+            mkdir($path."/".$itemID);
             for($i=0; $i<$imgCount; $i++){
                 $errorMsg = "immage count = $imgCount";
                 $this->popUpMsg($errorMsg);
                 $temp_name = $allImgs["tmp_name"][$i];
                 $type = pathinfo($name)["extension"];
-                $destination = $path."\\".$itemID."\\".$i.".".$type;
+                $destination = $path."/".$itemID."/".$i.".".$type;
                 move_uploaded_file($temp_name, $destination);
                 
             }
