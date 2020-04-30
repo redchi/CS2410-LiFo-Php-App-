@@ -22,9 +22,9 @@ class DatabaseManager{
      */
     private function connectToDatabase(){
         $Server_name = "localhost";
-        $username = "root";
-        $pwd = "";
-        $database_name = "lifo db 1";       
+        $username = "u-180050734";
+        $pwd = "hLAgNVPO6U67Nrn";
+        $database_name = "u_180050734_db";       
         $this ->DBConnect = mysqli_connect($Server_name,$username,$pwd ,$database_name );
         $dsn = "mysql:host=".$Server_name.";dbname=".$database_name;        
         $this->DBConnect = new PDO($dsn,$username,$pwd);
@@ -63,7 +63,7 @@ class DatabaseManager{
 // DATABASE SCHEMA 
 /*
  * 
-    CREATE TABLE Users (
+    CREATE TABLE users (
       UserID int NOT NULL AUTO_INCREMENT,
       Username varchar(255) NOT NULL UNIQUE,
       Email varchar(255) NOT NULL UNIQUE,
@@ -72,7 +72,7 @@ class DatabaseManager{
     );
     
     
-   CREATE TABLE Items (
+   CREATE TABLE items (
         ItemID int NOT NULL AUTO_INCREMENT,
         Name varchar(255) NOT NULL,
         Description varchar(1000),
@@ -84,20 +84,20 @@ class DatabaseManager{
         );
        
        
-        CREATE TABLE UsersToFoundItems (
+        CREATE TABLE userstofounditems (
             ItemID int NOT NULL,
            	UserID int NOT NULL,      
            	CONSTRAINT ItemID_FK FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON DELETE CASCADE,    
             CONSTRAINT UserID_FK FOREIGN KEY (UserID) REFERENCES users (UserID) ON DELETE CASCADE
         );
         
-        CREATE TABLE Requests(
+        CREATE TABLE requests(
             RequestID int NOT NULL,
       		Description varchar(1000)NOT NULL,
-            PRIMARY KEY(RequestID);
+            PRIMARY KEY(RequestID)
         );
        
-         CREATE TABLE RequestsToUserAndItem (
+         CREATE TABLE requeststouseranditem (
             RequestID int NOT NULL,
       		ItemID int NOT NULL,
            	UserID int NOT NULL,	

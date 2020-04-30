@@ -24,7 +24,7 @@ include_once  "Controller/Controller.php";
 session_start();
 
 define('URL', 'https://180050734.cs2410-web01pvm.aston.ac.uk');
-define('IMG_FOLDER',"asfk");
+define('IMG_FOLDER',"/public_html/UploadedImages");
 
 /*
  * Controller instance is based on session

@@ -103,7 +103,7 @@ class SqlHandler{
         return $returnObjs;
     }
     
-    public function addItem($itemDetails,$userID = 3){
+    public function addItem($itemDetails,$userID){
         $itemID = 0;
         $sql =   "INSERT INTO items (Name, Description, Category,Colour,Location,DateFound)
               VALUES (:name, :desc, :cat,:colour,:loc,:date);";
