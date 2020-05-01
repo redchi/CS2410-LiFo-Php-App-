@@ -635,10 +635,10 @@ class  Controller{
             $this->popUpMsg($errorMsg);
         }
         for($i=0; $i<$imgCount && $valid == true; $i++){
-            echo print_r($allImgs);
+           // echo print_r($allImgs);
             $name = $allImgs["name"][$i];
             $type = strtolower(pathinfo($name)["extension"]);
-            echo "checking";
+            //echo "checking";
             if(in_array($type, $imgTypes) == false){
                 $valid = false;
                 $errorMsg = "a file was not of type png or jpeg";
