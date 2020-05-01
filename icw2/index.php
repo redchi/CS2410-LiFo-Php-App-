@@ -23,8 +23,9 @@ include_once  "Controller/Controller.php";
 
 session_start();
 
-define('URL', 'http://localhost');
-define('IMG_FOLDER',"icw2/UploadedImages");
+
+define('URL', 'https://180050734.cs2410-web01pvm.aston.ac.uk');
+define('IMG_FOLDER',"/home/u-180050734/public_html/UploadedImages");
 
 /*
  * Controller instance is based on session

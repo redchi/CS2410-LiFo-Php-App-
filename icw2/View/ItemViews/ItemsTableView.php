@@ -57,7 +57,7 @@ Class ItemsTableView extends View{
   
   
 </head>
-<body>
+<body style = "background-color: #232323;">
 '.parent::DisplayNavBar().'
 
 <section class="engine"><a href="https://mobirise.info/v">html templates</a></section><section class="section-table cid-rXi1pnriPk" id="table1-18">
