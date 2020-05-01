@@ -20,7 +20,7 @@ class Mailer{
      */
     private function sendEmail($title,$body,$sendTo){
         require_once 'ThirdPartyScripts/PhpMailer/PHPMailerAutoload.php';
-        // $itemname = "yeee item";
+        
       
         $mail = new PHPMailer();
         $mail->IsSMTP(); // enable SMTP
@@ -93,7 +93,7 @@ class Mailer{
   <meta name="x-apple-disable-message-reformatting"> 
   <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
   <meta content="telephone=no" name="format-detection"> 
-  <title>New email template 2020-04-21</title> 
+  <title>Find The Lost</title> 
   <!--[if (mso 16)]>
     <style type="text/css">
     a {text-decoration: none;}
@@ -330,7 +330,7 @@ a[x-apple-data-detectors] {
   <meta name="x-apple-disable-message-reformatting"> 
   <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
   <meta content="telephone=no" name="format-detection"> 
-  <title>New email template 2020-04-21</title> 
+  <title>Find The Lost</title> 
   <!--[if (mso 16)]>
     <style type="text/css">
     a {text-decoration: none;}
@@ -572,7 +572,7 @@ a[x-apple-data-detectors] {
   <meta name="x-apple-disable-message-reformatting"> 
   <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
   <meta content="telephone=no" name="format-detection"> 
-  <title>New email template 2020-04-21</title> 
+  <title>Find The Lost</title> 
   <!--[if (mso 16)]>
     <style type="text/css">
     a {text-decoration: none;}

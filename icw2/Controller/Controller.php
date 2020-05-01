@@ -649,14 +649,14 @@ class  Controller{
         if($valid == true){
             mkdir($path."/".$itemID);
             for($i=0; $i<$imgCount; $i++){
-                $errorMsg = "immage count = $imgCount";
-                $this->popUpMsg($errorMsg);
                 $temp_name = $allImgs["tmp_name"][$i];
                 $type = pathinfo($name)["extension"];
                 $destination = $path."/".$itemID."/".$i.".".$type;
                 move_uploaded_file($temp_name, $destination);
                 
             }
+            $errorMsg = "added $imgCount photos";
+            $this->popUpMsg($errorMsg);
             $this->currentView = "AddItemPhotosView";
 
             gotoView("/Home");
